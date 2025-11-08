@@ -20,7 +20,11 @@
 }
 
 body {
-  background: linear-gradient(135deg, #000000 0%, #200053 50%, #000000 100%);
+  background: 
+    radial-gradient(circle at 20% 50%, rgba(32, 0, 83, 0.3) 0%, transparent 50%),
+    radial-gradient(circle at 80% 80%, rgba(32, 0, 83, 0.2) 0%, transparent 50%),
+    radial-gradient(circle at 40% 20%, rgba(32, 0, 83, 0.15) 0%, transparent 50%),
+    #000000;
   background-attachment: fixed;
   min-height: 100vh;
   color: var(--foreground);
