@@ -11,7 +11,7 @@ export function formatAddress(address: string, length = 6): string {
 }
 
 export function explorerUrl(address: string, txHash?: string): string {
-  const baseUrl = process.env.NEXT_PUBLIC_EXPLORER || 'https://plasmascan.to';
+  const baseUrl = process.env.NEXT_PUBLIC_EXPLORER || 'https://testnet.monadexplorer.com';
   if (txHash) {
     return `${baseUrl}/tx/${txHash}`;
   }
@@ -19,11 +19,11 @@ export function explorerUrl(address: string, txHash?: string): string {
 }
 
 // Helper: format chain config for viem/wagmi if needed elsewhere
-export const PLASMA_CHAIN = {
-  id: 9745,
-  name: 'Monad Mainnet Beta',
-  rpcUrl: 'https://rpc.plasma.to',
-  explorer: 'https://plasmascan.to',
+export const MONAD_CHAIN = {
+  id: 10143,
+  name: 'Monad Testnet',
+  rpcUrl: 'https://testnet-rpc.monad.xyz',
+  explorer: 'https://testnet.monadexplorer.com',
 };
 
 export function parseCSV(csvText: string): Array<{ address: string; amount: string }> {

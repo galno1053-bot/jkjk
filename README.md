@@ -45,9 +45,9 @@ npm install
 3. Set up environment variables in Vercel Project Settings → Environment Variables:
 
 ```env
-NEXT_PUBLIC_CHAIN_ID=9745
-NEXT_PUBLIC_RPC=https://rpc.plasma.to
-NEXT_PUBLIC_EXPLORER=https://plasmascan.to/
+NEXT_PUBLIC_CHAIN_ID=10143
+NEXT_PUBLIC_RPC=https://testnet-rpc.monad.xyz
+NEXT_PUBLIC_EXPLORER=https://testnet.monadexplorer.com
 NEXT_PUBLIC_WALLET_CONNECT_PROJECT_ID=your-walletconnect-project-id
 
 # Contract addresses (fill with real addresses when ready)
@@ -71,8 +71,8 @@ npm run dev
 
 All environment variables must be prefixed with `NEXT_PUBLIC_` as they are used client-side:
 
-- `NEXT_PUBLIC_CHAIN_ID`: Monad Mainnet Beta chain ID (9745)
-- `NEXT_PUBLIC_RPC`: RPC endpoint for Monad network
+- `NEXT_PUBLIC_CHAIN_ID`: Monad Testnet chain ID (10143)
+- `NEXT_PUBLIC_RPC`: RPC endpoint for Monad Testnet (https://testnet-rpc.monad.xyz)
 - `NEXT_PUBLIC_EXPLORER`: Block explorer URL for transaction links
 - `NEXT_PUBLIC_WALLET_CONNECT_PROJECT_ID`: WalletConnect project ID for wallet connection
 - Contract addresses for each tool (see below)
@@ -121,7 +121,7 @@ The app can be deployed to any platform that supports Next.js:
 
 1. Click "Connect Wallet" in the top-right corner
 2. Select your preferred wallet
-3. Ensure you're connected to Monad Mainnet Beta (chain ID: 9745)
+3. Ensure you're connected to Monad Testnet (chain ID: 10143)
 
 ### Using the Tools
 
@@ -152,11 +152,11 @@ address,amount
 
 ## Network Information
 
-- **Chain ID**: 9745
-- **Network Name**: Monad Mainnet Beta
-- **Native Token**: XPL (18 decimals)
-- **RPC URL**: https://rpc.plasma.to
-- **Explorer**: https://plasmascan.to
+- **Chain ID**: 10143
+- **Network Name**: Monad Testnet
+- **Native Token**: MON (18 decimals)
+- **RPC URL**: https://testnet-rpc.monad.xyz
+- **Explorer**: https://testnet.monadexplorer.com
 
 ## Development
 

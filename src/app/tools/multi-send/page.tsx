@@ -492,7 +492,7 @@ export default function MultiSendPage() {
                   }`}>
                     {process.env.NEXT_PUBLIC_MULTISEND 
                       ? 'You can send tokens to multiple recipients in a single transaction.'
-                      : 'Multi-send requires a deployed multi-send contract on Monad Mainnet Beta. Please contact support for contract deployment.'
+                      : 'Multi-send requires a deployed multi-send contract on Monad Testnet. Please contact support for contract deployment.'
                     }
                   </p>
                 </div>

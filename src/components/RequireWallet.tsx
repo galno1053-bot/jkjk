@@ -1,7 +1,7 @@
 'use client';
 
 import { useAccount, useChainId, useSwitchChain } from 'wagmi';
-import { plasmaMainnetBeta } from '@/lib/chains';
+import { monadTestnet } from '@/lib/chains';
 import { ConnectButton } from '@rainbow-me/rainbowkit';
 
 interface RequireWalletProps {
@@ -25,7 +25,7 @@ export function RequireWallet({ children }: RequireWalletProps) {
             </div>
             <h2 className="text-2xl font-bold text-gray-900 mb-2">Connect Your Wallet</h2>
             <p className="text-gray-600">
-              Connect your wallet to use tools on Monad Mainnet Beta.
+              Connect your wallet to use tools on Monad Testnet.
             </p>
           </div>
           <div className="flex justify-center">
@@ -36,7 +36,7 @@ export function RequireWallet({ children }: RequireWalletProps) {
     );
   }
 
-  if (chainId !== plasmaMainnetBeta.id) {
+  if (chainId !== monadTestnet.id) {
     return (
       <div className="min-h-screen flex items-center justify-center bg-gray-50">
         <div className="max-w-md w-full bg-white rounded-lg shadow-sm border border-gray-200 p-8 text-center">
@@ -48,13 +48,13 @@ export function RequireWallet({ children }: RequireWalletProps) {
             </div>
             <h2 className="text-2xl font-bold text-gray-900 mb-2">Wrong Network</h2>
             <p className="text-gray-600 mb-4">
-              Please switch to Monad Mainnet Beta to use these tools.
+              Please switch to Monad Testnet to use these tools.
             </p>
             <button
-              onClick={() => switchChain({ chainId: plasmaMainnetBeta.id })}
+              onClick={() => switchChain({ chainId: monadTestnet.id })}
               className="btn-primary w-full"
             >
-              Switch to Monad Mainnet Beta
+              Switch to Monad Testnet
             </button>
           </div>
         </div>

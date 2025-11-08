@@ -148,7 +148,7 @@ export default function CreateTokenPage() {
           <div className="mb-8">
             <h1 className="text-3xl font-bold text-gray-900 mb-2">Create Token</h1>
             <p className="text-gray-600">
-              Deploy a new ERC-20 token on Monad Mainnet Beta with custom parameters.
+              Deploy a new ERC-20 token on Monad Testnet with custom parameters.
             </p>
           </div>
 
