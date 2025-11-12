@@ -23,7 +23,7 @@ export const metadata: Metadata = {
   title: 'Nadz Tools',
   description: 'Tools for Token Creation, Locking, Vesting, and more on Monad Testnet. Built for developers, teams, and projects that need reliable blockchain infrastructure.',
   icons: {
-    icon: '/favicon.svg',
+    icon: '/nadz-tools-logo.svg',
   },
 };
 
