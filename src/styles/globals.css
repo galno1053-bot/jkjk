@@ -62,7 +62,7 @@ body {
   }
   
   .card {
-    @apply bg-black/60 backdrop-blur-sm border-2 border-[#200053]/70 rounded-lg shadow-lg;
+    @apply bg-[#1a0a2e] backdrop-blur-sm border-2 border-[#6500A9] rounded-lg shadow-lg;
   }
   
   .input {

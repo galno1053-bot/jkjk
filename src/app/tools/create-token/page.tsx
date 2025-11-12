@@ -237,7 +237,7 @@ export default function CreateTokenPage() {
             <div className="lg:col-span-4">
               <div className="card p-6 lg:sticky lg:top-24 space-y-6">
                 {/* Fee Information */}
-                <div className="bg-black/60 backdrop-blur-sm border-2 border-[#200053]/70 rounded-lg p-4">
+                <div className="bg-[#1a0a2e] backdrop-blur-sm border-2 border-[#6500A9] rounded-lg p-4">
                   <h4 className="font-medium text-white mb-2">Token Creation Fee</h4>
                   <p className="text-sm text-gray-300">
                     Fee {feeAmount ? formatUnits(feeAmount as bigint, 18) : '1'} XPL will be charged for token creation.
@@ -246,7 +246,7 @@ export default function CreateTokenPage() {
 
                 <div>
                   <h3 className="text-lg font-semibold text-white mb-2">Preview</h3>
-                  <div className="bg-black/60 backdrop-blur-sm border-2 border-[#200053]/70 rounded-lg p-4 space-y-2">
+                  <div className="bg-[#1a0a2e] backdrop-blur-sm border-2 border-[#6500A9] rounded-lg p-4 space-y-2">
                     <p className="text-sm text-gray-300">Name</p>
                     <p className="font-semibold text-white">{watch('name') || '—'}</p>
                     <p className="text-sm text-gray-300 mt-3">Symbol</p>
