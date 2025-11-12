@@ -375,16 +375,16 @@ export default function TokenLockerPage() {
                 </form>
 
                 {isSuccess && hash && lastTxType === 'lock' && (
-                  <div className="mt-8 p-4 bg-[#f0ebf5] border border-[#200053] rounded-lg">
-                    <h3 className="text-lg font-semibold text-[#200053] mb-2">Token Locked Successfully!</h3>
-                    <p className="text-[#200053] mb-4">
+                  <div className="mt-8 p-4 bg-[#f0ebf5] border border-[#8500FF] rounded-lg">
+                    <h3 className="text-lg font-semibold text-[#8500FF] mb-2">Token Locked Successfully!</h3>
+                    <p className="text-[#8500FF] mb-4">
                       Your token has been locked with the specified parameters.
                     </p>
                     <a
                       href={explorerUrl('', hash)}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="inline-flex items-center text-[#200053] hover:text-[#180042] font-medium"
+                      className="inline-flex items-center text-[#8500FF] hover:text-[#7000D9] font-medium"
                     >
                       View Transaction on Explorer
                       <svg className="ml-1 h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -402,7 +402,7 @@ export default function TokenLockerPage() {
                 <h3 className="text-lg font-semibold text-white">Lock Information</h3>
                 
                 {/* Fee Information */}
-                <div className="bg-black/40 backdrop-blur-sm border border-[#200053]/30 rounded-lg p-4">
+                <div className="bg-black/40 backdrop-blur-sm border border-[#8500FF]/30 rounded-lg p-4">
                   <h4 className="font-medium text-white mb-2">Locking Fee</h4>
                   <p className="text-sm text-blue-300">
                     Fee {feeAmount ? formatUnits(feeAmount as bigint, 18) : '50'} MON will be charged for each lock operation.

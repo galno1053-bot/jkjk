@@ -105,7 +105,7 @@ export default function LiquidityLockerPage() {
             <div className="absolute inset-0 z-10 pointer-events-auto cursor-not-allowed">
               <div className="absolute inset-0 backdrop-blur-md bg-black/70" />
               <div className="absolute inset-x-0 top-24 mx-auto max-w-2xl z-20 text-center px-6">
-                <div className="rounded-lg border-2 border-[#6500A9] bg-[#1a0a2e] backdrop-blur-sm p-4 shadow-sm">
+                <div className="rounded-lg border-2 border-[#8500FF] bg-[#1a0a2e] backdrop-blur-sm p-4 shadow-sm">
                   <p className="font-semibold mb-1 text-white">Coming Soon</p>
                   <p className="text-sm text-gray-300">
                     Liquidity Locker is not available yet. For now, you can lock your LP tokens using the Token Locker.
@@ -178,16 +178,16 @@ export default function LiquidityLockerPage() {
                 </form>
 
                 {isSuccess && hash && (
-                  <div className="mt-8 p-4 bg-[#f0ebf5] border border-[#200053] rounded-lg">
-                    <h3 className="text-lg font-semibold text-[#200053] mb-2">LP Token Locked Successfully!</h3>
-                    <p className="text-[#200053] mb-4">
+                  <div className="mt-8 p-4 bg-[#f0ebf5] border border-[#8500FF] rounded-lg">
+                    <h3 className="text-lg font-semibold text-[#8500FF] mb-2">LP Token Locked Successfully!</h3>
+                    <p className="text-[#8500FF] mb-4">
                       Your liquidity token has been locked with the specified parameters.
                     </p>
                     <a
                       href={explorerUrl('', hash)}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="inline-flex items-center text-[#200053] hover:text-[#180042] font-medium"
+                      className="inline-flex items-center text-[#8500FF] hover:text-[#7000D9] font-medium"
                     >
                       View Transaction on Explorer
                       <svg className="ml-1 h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">

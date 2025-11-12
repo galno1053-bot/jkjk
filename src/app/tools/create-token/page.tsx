@@ -212,16 +212,16 @@ export default function CreateTokenPage() {
                 </form>
 
                 {isSuccess && hash && (
-                  <div className="mt-8 p-4 bg-[#f0ebf5] border border-[#200053] rounded-lg">
-                    <h3 className="text-lg font-semibold text-[#200053] mb-2">Token Created Successfully!</h3>
-                    <p className="text-[#200053] mb-4">
+                  <div className="mt-8 p-4 bg-[#f0ebf5] border border-[#8500FF] rounded-lg">
+                    <h3 className="text-lg font-semibold text-[#8500FF] mb-2">Token Created Successfully!</h3>
+                    <p className="text-[#8500FF] mb-4">
                       Your token has been deployed to the blockchain.
                     </p>
                     <a
                       href={explorerUrl('', hash)}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="inline-flex items-center text-[#200053] hover:text-[#180042] font-medium"
+                      className="inline-flex items-center text-[#8500FF] hover:text-[#7000D9] font-medium"
                     >
                       View Transaction on Explorer
                       <svg className="ml-1 h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -237,7 +237,7 @@ export default function CreateTokenPage() {
             <div className="lg:col-span-4">
               <div className="card p-6 lg:sticky lg:top-24 space-y-6">
                 {/* Fee Information */}
-                <div className="bg-[#1a0a2e] backdrop-blur-sm border-2 border-[#6500A9] rounded-lg p-4">
+                <div className="bg-[#1a0a2e] backdrop-blur-sm border-2 border-[#8500FF] rounded-lg p-4">
                   <h4 className="font-medium text-white mb-2">Token Creation Fee</h4>
                   <p className="text-sm text-gray-300">
                     Fee {feeAmount ? formatUnits(feeAmount as bigint, 18) : '50'} MON will be charged for token creation.
@@ -246,7 +246,7 @@ export default function CreateTokenPage() {
 
                 <div>
                   <h3 className="text-lg font-semibold text-white mb-2">Preview</h3>
-                  <div className="bg-[#1a0a2e] backdrop-blur-sm border-2 border-[#6500A9] rounded-lg p-4 space-y-2">
+                  <div className="bg-[#1a0a2e] backdrop-blur-sm border-2 border-[#8500FF] rounded-lg p-4 space-y-2">
                     <p className="text-sm text-gray-300">Name</p>
                     <p className="font-semibold text-white">{watch('name') || '—'}</p>
                     <p className="text-sm text-gray-300 mt-3">Symbol</p>

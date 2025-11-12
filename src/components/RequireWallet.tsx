@@ -16,9 +16,9 @@ export function RequireWallet({ children }: RequireWalletProps) {
   if (!isConnected) {
     return (
       <div className="min-h-screen flex items-center justify-center">
-        <div className="max-w-md w-full bg-black/40 backdrop-blur-sm rounded-lg shadow-lg border border-[#200053]/30 p-8 text-center">
+        <div className="max-w-md w-full bg-black/40 backdrop-blur-sm rounded-lg shadow-lg border border-[#8500FF]/30 p-8 text-center">
           <div className="mb-6">
-            <div className="mx-auto h-12 w-12 rounded-full bg-[#200053] flex items-center justify-center mb-4">
+            <div className="mx-auto h-12 w-12 rounded-full bg-[#8500FF] flex items-center justify-center mb-4">
               <svg className="h-6 w-6 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
               </svg>
@@ -39,7 +39,7 @@ export function RequireWallet({ children }: RequireWalletProps) {
   if (chainId !== monadTestnet.id) {
     return (
       <div className="min-h-screen flex items-center justify-center">
-        <div className="max-w-md w-full bg-black/40 backdrop-blur-sm rounded-lg shadow-lg border border-[#200053]/30 p-8 text-center">
+        <div className="max-w-md w-full bg-black/40 backdrop-blur-sm rounded-lg shadow-lg border border-[#8500FF]/30 p-8 text-center">
           <div className="mb-6">
             <div className="mx-auto h-12 w-12 rounded-full bg-red-100 flex items-center justify-center mb-4">
               <svg className="h-6 w-6 text-red-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">

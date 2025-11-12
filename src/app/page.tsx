@@ -7,35 +7,35 @@ const tools = [
     description: 'Create custom tokens on Monad Testnet',
     href: '/tools/create-token',
     icon: Coins,
-    color: 'bg-[#200053]',
+    color: 'bg-[#8500FF]',
   },
   {
     name: 'Token Locker',
     description: 'Lock your tokens with custom vesting schedules',
     href: '/tools/token-locker',
     icon: Lock,
-    color: 'bg-[#200053]',
+    color: 'bg-[#8500FF]',
   },
   {
     name: 'Liquidity Locker',
     description: 'Secure your LP tokens with time-based locks',
     href: '/tools/liquidity-locker',
     icon: Shield,
-    color: 'bg-[#200053]',
+    color: 'bg-[#8500FF]',
   },
   {
     name: 'Token Vesting',
     description: 'Create and manage token vesting schedules',
     href: '/tools/vesting',
     icon: Calendar,
-    color: 'bg-[#200053]',
+    color: 'bg-[#8500FF]',
   },
   {
     name: 'Multi-Send',
     description: 'Send tokens to multiple addresses efficiently',
     href: '/tools/multi-send',
     icon: Send,
-    color: 'bg-[#200053]',
+    color: 'bg-[#8500FF]',
   },
 ];
 
@@ -85,7 +85,7 @@ export default function HomePage() {
                 <div className={`w-12 h-12 ${tool.color} rounded-lg flex items-center justify-center mb-4 group-hover:scale-110 transition-transform`}>
                   <tool.icon className="h-6 w-6 text-white" />
                 </div>
-                <h3 className="text-xl font-semibold text-white mb-2 group-hover:text-[#8800D1] transition-colors">
+                <h3 className="text-xl font-semibold text-white mb-2 group-hover:text-[#8500FF] transition-colors">
                   {tool.name}
                 </h3>
                 <p className="text-gray-300 group-hover:text-gray-200 transition-colors">

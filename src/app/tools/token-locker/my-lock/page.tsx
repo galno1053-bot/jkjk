@@ -111,11 +111,11 @@ export default function MyLockPage() {
               <>
                 {/* Summary */}
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
-                  <div className="rounded-lg border border-[#200053]/30 p-4 bg-black/40 backdrop-blur-sm">
+                  <div className="rounded-lg border border-[#8500FF]/30 p-4 bg-black/40 backdrop-blur-sm">
                     <p className="text-xs text-gray-400">Total Locks</p>
                     <p className="text-2xl font-semibold text-white">{totalLocksCount}</p>
                   </div>
-                  <div className="rounded-lg border border-[#200053]/30 p-4 bg-black/40 backdrop-blur-sm">
+                  <div className="rounded-lg border border-[#8500FF]/30 p-4 bg-black/40 backdrop-blur-sm">
                     <p className="text-xs text-gray-400">Total Unlock</p>
                     <p className="text-2xl font-semibold text-white">{totalUnlockCount}</p>
                   </div>
@@ -132,7 +132,7 @@ export default function MyLockPage() {
                   </thead>
                   <tbody>
                     {rows.map((row, idx) => (
-                      <tr key={row?.lockId ? String(row.lockId) : `row-${idx}`} className="border-t border-[#200053]/30 hover:bg-black/20">
+                      <tr key={row?.lockId ? String(row.lockId) : `row-${idx}`} className="border-t border-[#8500FF]/30 hover:bg-black/20">
                         <td className="py-3 pr-4 font-mono break-all">
                           {row?.token || '-'}
                           <button
@@ -162,8 +162,8 @@ export default function MyLockPage() {
           </div>
 
           {txHash && (
-            <div className="mt-6 p-4 bg-[#f0ebf5] border border-[#200053] rounded-lg">
-              <a href={explorerUrl('', txHash)} target="_blank" rel="noopener noreferrer" className="text-[#200053] underline">View transaction on explorer</a>
+            <div className="mt-6 p-4 bg-[#f0ebf5] border border-[#8500FF] rounded-lg">
+              <a href={explorerUrl('', txHash)} target="_blank" rel="noopener noreferrer" className="text-[#8500FF] underline">View transaction on explorer</a>
             </div>
           )}
         </div>

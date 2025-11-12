@@ -3,15 +3,15 @@
 @tailwind utilities;
 
 :root {
-  --primary: #200053;
+  --primary: #8500FF;
   --primary-foreground: #ffffff;
   --background: #000000;
   --foreground: #ededed;
   --muted: #1a1a1a;
   --muted-foreground: #9ca3af;
-  --border: #200053;
+  --border: #8500FF;
   --input: #1a1a1a;
-  --ring: #8800D1;
+  --ring: #8500FF;
 }
 
 * {
@@ -38,14 +38,14 @@ body {
 
 @layer components {
   .btn-primary {
-    background: linear-gradient(135deg, #6500A9 0%, #8800D1 100%);
+    background: linear-gradient(135deg, #7000D9 0%, #8500FF 100%);
     @apply text-white font-bold px-5 py-3 rounded-lg transition-all shadow-lg border-2 border-transparent text-lg;
   }
   
   .btn-primary:hover {
-    background: linear-gradient(135deg, #8800D1 0%, #6500A9 100%);
+    background: linear-gradient(135deg, #8500FF 0%, #7000D9 100%);
     transform: translateY(-1px);
-    box-shadow: 0 10px 25px rgba(101, 0, 169, 0.4);
+    box-shadow: 0 10px 25px rgba(133, 0, 255, 0.4);
   }
   
   .btn-primary:disabled {
@@ -62,10 +62,10 @@ body {
   }
   
   .card {
-    @apply bg-[#1a0a2e] backdrop-blur-sm border-2 border-[#6500A9] rounded-lg shadow-lg;
+    @apply bg-[#1a0a2e] backdrop-blur-sm border-2 border-[#8500FF] rounded-lg shadow-lg;
   }
   
   .input {
-    @apply w-full h-12 px-4 rounded-md bg-black/30 backdrop-blur-sm text-white border-2 border-[#200053]/50 focus:border-[#8800D1] focus:outline-none focus:ring-2 focus:ring-[#8800D1] transition-colors hover:border-[#200053];
+    @apply w-full h-12 px-4 rounded-md bg-black/30 backdrop-blur-sm text-white border-2 border-[#8500FF]/50 focus:border-[#8500FF] focus:outline-none focus:ring-2 focus:ring-[#8500FF] transition-colors hover:border-[#8500FF];
   }
 }

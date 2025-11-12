@@ -30,15 +30,15 @@ body {
 /* Custom component classes */
 @layer components {
   .btn-primary {
-    background: linear-gradient(135deg, #6500A9 0%, #8800D1 100%);
+    background: linear-gradient(135deg, #7000D9 0%, #8500FF 100%);
     @apply text-white font-bold px-5 py-3 rounded-lg transition-all shadow-lg border-2 border-transparent text-lg;
     font-family: var(--font-pp-mori-semibold), Arial, Helvetica, sans-serif;
   }
 
   .btn-primary:hover {
-    background: linear-gradient(135deg, #8800D1 0%, #6500A9 100%);
+    background: linear-gradient(135deg, #8500FF 0%, #7000D9 100%);
     transform: translateY(-1px);
-    box-shadow: 0 10px 25px rgba(101, 0, 169, 0.4);
+    box-shadow: 0 10px 25px rgba(133, 0, 255, 0.4);
   }
 
   .btn-primary:disabled {
@@ -56,7 +56,7 @@ body {
   }
 
   .card {
-    @apply bg-[#1a0a2e] backdrop-blur-sm border-2 border-[#6500A9] rounded-lg shadow-lg;
+    @apply bg-[#1a0a2e] backdrop-blur-sm border-2 border-[#8500FF] rounded-lg shadow-lg;
   }
 
   /* Font utility classes */

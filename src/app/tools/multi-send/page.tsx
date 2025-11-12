@@ -455,14 +455,14 @@ export default function MultiSendPage() {
                 <h3 className="text-lg font-semibold text-white">Summary</h3>
                 
                 {/* Fee Information */}
-                <div className="bg-black/40 backdrop-blur-sm border border-[#200053]/30 rounded-lg p-4">
+                <div className="bg-black/40 backdrop-blur-sm border border-[#8500FF]/30 rounded-lg p-4">
                   <h4 className="font-medium text-white mb-2">Multi-Send Fee</h4>
                   <p className="text-sm text-gray-300">
                     Fee {feeAmount ? formatUnits(feeAmount as bigint, 18) : '50'} MON will be charged for each multi-send operation.
                   </p>
                 </div>
 
-                <div className="bg-black/40 backdrop-blur-sm border border-[#200053]/30 rounded-lg p-4">
+                <div className="bg-black/40 backdrop-blur-sm border border-[#8500FF]/30 rounded-lg p-4">
                   <p className="text-sm text-gray-300">Token Type</p>
                   <p className="text-lg font-bold text-white">
                     {watch('tokenType') === 'native' ? 'Native (MON)' : 'Token'}
@@ -482,12 +482,12 @@ export default function MultiSendPage() {
                 </div>
                 <div className={`border rounded-lg p-4 ${
                   process.env.NEXT_PUBLIC_MULTISEND 
-                    ? 'bg-[#f0ebf5] border-[#200053]' 
-                    : 'bg-black/40 backdrop-blur-sm border border-[#200053]/30'
+                    ? 'bg-[#f0ebf5] border-[#8500FF]' 
+                    : 'bg-black/40 backdrop-blur-sm border border-[#8500FF]/30'
                 }`}>
                   <p className={`text-sm ${
                     process.env.NEXT_PUBLIC_MULTISEND 
-                      ? 'text-[#8800D1]' 
+                      ? 'text-[#8500FF]' 
                       : 'text-blue-300'
                   }`}>
                     You can send tokens to multiple recipients in a single transaction.
