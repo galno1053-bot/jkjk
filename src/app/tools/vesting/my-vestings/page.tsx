@@ -1,7 +1,7 @@
 'use client';
 
-import { useEffect, useRef, useState } from 'react';
-import { useAccount, useReadContract, useWriteContract } from 'wagmi';
+import { useMemo, useState } from 'react';
+import { useAccount, useReadContract, useReadContracts, useWriteContract } from 'wagmi';
 import vestingAbi from '@/lib/abis/vestingFactory.json';
 import { formatUnits } from 'viem';
 
@@ -20,9 +20,7 @@ type Schedule = {
 export default function MyVestingsPage() {
   const { address } = useAccount();
   const { writeContract } = useWriteContract();
-  const [decimalsMap, setDecimalsMap] = useState<Record<string, number>>({});
   const [isLoading, setIsLoading] = useState(false);
-  const mountedRef = useRef(true);
 
   const { data: ids } = useReadContract({
     address: process.env.NEXT_PUBLIC_VESTING_FACTORY as `0x${string}`,
@@ -34,104 +32,65 @@ export default function MyVestingsPage() {
 
   const scheduleIds = (ids as unknown as bigint[]) ?? [];
 
-  // Lazy fetch per schedule (simple version)
-  const [schedules, setSchedules] = useState<Array<{ id: bigint; s: Schedule }>>([]);
-  useEffect(() => {
-    if (scheduleIds.length === 0) {
-      setSchedules([]);
-      return;
-    }
-    
-    let timeoutId: NodeJS.Timeout | undefined;
-    
-    (async () => {
-      const newSchedules: Array<{ id: bigint; s: Schedule }> = [];
-      
-      for (const id of scheduleIds) {
-        if (!mountedRef.current) break;
-        
-        try {
-          // Add timeout to prevent hanging
-          const promise = (window as unknown as { wagmi?: { readContract?: (p: { address: string; abi: unknown; functionName: string; args: unknown[] }) => Promise<unknown> } }).wagmi?.readContract?.({
-            address: process.env.NEXT_PUBLIC_VESTING_FACTORY as string,
-            abi: vestingAbi as unknown,
-            functionName: 'schedules',
-            args: [id as unknown as bigint],
-          });
-          
-          const timeoutPromise = new Promise((_, reject) => {
-            timeoutId = setTimeout(() => reject(new Error('Timeout')), 3000);
-          });
-          
-          const res = await Promise.race([promise, timeoutPromise]);
-          if (timeoutId) {
-            clearTimeout(timeoutId);
-          }
-          
-          if (res && mountedRef.current) {
-            newSchedules.push({ id, s: res as Schedule });
-          }
-        } catch (error) {
-          if (timeoutId) {
-            clearTimeout(timeoutId);
-          }
-          console.warn('Failed to fetch schedule:', id, error);
-        }
-      }
-      
-      if (mountedRef.current) {
-        setSchedules(newSchedules);
-      }
-    })();
-    
-    return () => {
-      if (timeoutId) {
-        clearTimeout(timeoutId);
-      }
-    };
-  }, [scheduleIds]);
+  const { data: schedulesData, isLoading: schedulesLoading } = useReadContracts({
+    contracts: scheduleIds.map((id) => ({
+      address: process.env.NEXT_PUBLIC_VESTING_FACTORY as `0x${string}`,
+      abi: vestingAbi,
+      functionName: 'schedules',
+      args: [id],
+    })),
+    query: {
+      enabled: scheduleIds.length > 0 && !!process.env.NEXT_PUBLIC_VESTING_FACTORY,
+    },
+  });
 
-  // Helper to read decimals per token lazily
-  useEffect(() => {
-    if (schedules.length === 0) return;
-    
-    (async () => {
-      const newDecimalsMap: Record<string, number> = {};
-      
-      for (const { s } of schedules) {
-        if (!mountedRef.current) break;
-        
-        const key = s.token.toLowerCase();
-        if (decimalsMap[key] !== undefined) continue;
-        
-        try {
-          const dec = await (window as unknown as { wagmi?: { readContract?: (p: { address: string; abi: unknown; functionName: string }) => Promise<unknown> } }).wagmi?.readContract?.({
-            address: s.token as unknown as string,
-            abi: [{ inputs: [], name: 'decimals', outputs: [{ name: '', type: 'uint8' }], stateMutability: 'view', type: 'function' }] as unknown,
-            functionName: 'decimals',
-          });
-          if (mountedRef.current) {
-            newDecimalsMap[key] = Number(dec ?? 18);
-          }
-        } catch {
-          if (mountedRef.current) {
-            newDecimalsMap[key] = 18;
-          }
-        }
-      }
-      
-      if (mountedRef.current && Object.keys(newDecimalsMap).length > 0) {
-        setDecimalsMap((m) => ({ ...m, ...newDecimalsMap }));
-      }
-    })();
-  }, [schedules.length, decimalsMap]);
+  const schedules = useMemo(() => {
+    if (!schedulesData || schedulesData.length === 0) return [] as Array<{ id: bigint; s: Schedule }>;
+    return schedulesData
+      .map((entry, idx) => {
+        const schedule = (entry?.result ?? null) as Schedule | null;
+        if (!schedule) return null;
+        return { id: scheduleIds[idx], s: schedule };
+      })
+      .filter((item): item is { id: bigint; s: Schedule } => !!item);
+  }, [scheduleIds, schedulesData]);
 
-  // Cleanup on unmount
-  useEffect(() => {
-    return () => {
-      mountedRef.current = false;
-    };
-  }, []);
+  const uniqueTokens = useMemo(() => {
+    const set = new Set<string>();
+    schedules.forEach(({ s }) => {
+      set.add(s.token.toLowerCase());
+    });
+    return Array.from(set);
+  }, [schedules]);
+
+  const { data: decimalsData } = useReadContracts({
+    contracts: uniqueTokens.map((token) => ({
+      address: token as `0x${string}`,
+      abi: [
+        {
+          inputs: [],
+          name: 'decimals',
+          outputs: [{ name: '', type: 'uint8' }],
+          stateMutability: 'view',
+          type: 'function',
+        },
+      ],
+      functionName: 'decimals',
+    })),
+    query: {
+      enabled: uniqueTokens.length > 0,
+    },
+  });
+
+  const decimalsMap = useMemo(() => {
+    if (!decimalsData) return {} as Record<string, number>;
+    const map: Record<string, number> = {};
+    uniqueTokens.forEach((token, idx) => {
+      const value = decimalsData[idx]?.result as number | undefined;
+      map[token] = value ?? 18;
+    });
+    return map;
+  }, [decimalsData, uniqueTokens]);
 
   const claim = async (id: bigint) => {
     try {
@@ -152,7 +111,9 @@ export default function MyVestingsPage() {
   return (
     <div className="max-w-6xl mx-auto p-8 relative z-0 pointer-events-auto">
       <h1 className="text-2xl font-bold text-white mb-4">My Vestings</h1>
-      {schedules.length === 0 ? (
+      {schedulesLoading ? (
+        <p className="text-gray-300">Loading vesting schedules...</p>
+      ) : schedules.length === 0 ? (
         <p className="text-gray-300">No vesting schedules found.</p>
       ) : (
         <div className="space-y-3">
