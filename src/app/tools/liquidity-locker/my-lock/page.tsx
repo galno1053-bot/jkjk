@@ -297,7 +297,6 @@ export default function MyLiquidityLockPage() {
             </div>
           )}
         </div>
-      </div>
     </RequireWallet>
   );
 }
