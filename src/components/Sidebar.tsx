@@ -34,8 +34,8 @@ const navigation: NavItem[] = [
     name: 'Token Locker',
     icon: Lock,
     children: [
-      { name: 'Create Locks', href: '/token-locker/token-lock' },
-      { name: 'My Lock', href: '/token-locker/my-lock' },
+      { name: 'Create Lock', href: '/token-locker/token-lock' },
+      { name: 'My Locks', href: '/token-locker/my-lock' },
     ],
   },
   {
@@ -43,7 +43,7 @@ const navigation: NavItem[] = [
     icon: Shield,
     children: [
       { name: 'Create Lock', href: '/liquidity-locker' },
-      { name: 'My Lock', href: '/liquidity-locker/my-lock' },
+      { name: 'My Locks', href: '/liquidity-locker/my-lock' },
     ],
   },
   {
