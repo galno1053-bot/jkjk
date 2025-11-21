@@ -3,7 +3,9 @@
 import { useMemo, useState } from 'react';
 import { useAccount, useReadContract, useReadContracts, useWriteContract } from 'wagmi';
 import vestingAbi from '@/lib/abis/vestingFactory.json';
-import { formatUnits } from 'viem';
+import { formatUnits, type Abi } from 'viem';
+
+const vestingFactoryAbi = vestingAbi as Abi;
 
 type Schedule = {
   token: `0x${string}`;
@@ -24,7 +26,7 @@ export default function MyVestingsPage() {
 
   const { data: ids } = useReadContract({
     address: process.env.NEXT_PUBLIC_VESTING_FACTORY as `0x${string}`,
-    abi: vestingAbi,
+    abi: vestingFactoryAbi,
     functionName: 'getUserSchedules',
     args: address ? [address] : undefined,
     query: { enabled: !!address && !!process.env.NEXT_PUBLIC_VESTING_FACTORY },
@@ -35,7 +37,7 @@ export default function MyVestingsPage() {
   const { data: schedulesData, isLoading: schedulesLoading } = useReadContracts({
     contracts: scheduleIds.map((id) => ({
       address: process.env.NEXT_PUBLIC_VESTING_FACTORY as `0x${string}`,
-      abi: vestingAbi,
+      abi: vestingFactoryAbi,
       functionName: 'schedules',
       args: [id],
     })),
@@ -58,7 +60,7 @@ export default function MyVestingsPage() {
   const uniqueTokens = useMemo(() => {
     const set = new Set<string>();
     schedules.forEach(({ s }) => {
-      set.add(s.token.toLowerCase());
+      set.add(s.token.toLowerCase() as `0x${string}`);
     });
     return Array.from(set);
   }, [schedules]);
@@ -97,7 +99,7 @@ export default function MyVestingsPage() {
       setIsLoading(true);
       await writeContract({
         address: process.env.NEXT_PUBLIC_VESTING_FACTORY as `0x${string}`,
-        abi: vestingAbi,
+        abi: vestingFactoryAbi,
         functionName: 'claim',
         args: [id],
       });
