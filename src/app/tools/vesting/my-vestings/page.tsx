@@ -4,6 +4,7 @@ import { useMemo, useState } from 'react';
 import { useAccount, useReadContract, useReadContracts, useWriteContract } from 'wagmi';
 import vestingAbi from '@/lib/abis/vestingFactory.json';
 import { formatUnits, type Abi } from 'viem';
+import { RequireWallet } from '@/components/RequireWallet';
 
 const vestingFactoryAbi = vestingAbi as Abi;
 const erc20DecimalsAbi = [
@@ -29,6 +30,25 @@ type Schedule = {
 };
 
 export default function MyVestingsPage() {
+  const isComingSoon = true;
+
+  if (isComingSoon) {
+    return (
+      <RequireWallet>
+        <div className="min-h-screen flex items-center justify-center px-4 py-16">
+          <div className="card max-w-2xl w-full text-center p-10 space-y-4">
+            <p className="text-sm font-semibold tracking-wider text-white/70 uppercase">Coming Soon</p>
+            <h1 className="text-3xl font-bold text-white">My Vestings</h1>
+            <p className="text-gray-300">
+              Vesting dashboards will arrive shortly so you can track schedules and claim directly from Nadz Tools.
+              We&apos;re putting on the finishing touches—thanks for your patience!
+            </p>
+          </div>
+        </div>
+      </RequireWallet>
+    );
+  }
+
   const { address } = useAccount();
   const { writeContract } = useWriteContract();
   const [isLoading, setIsLoading] = useState(false);
