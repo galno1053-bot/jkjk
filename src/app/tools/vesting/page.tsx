@@ -377,27 +377,9 @@ export default function VestingPage() {
     // This would need to be handled differently in a real implementation
   }
 
-  // Conditional return after all hooks
-  if (isComingSoon) {
-    return (
-      <RequireWallet>
-        <div className="min-h-screen flex items-center justify-center px-4 py-16">
-          <div className="card max-w-2xl w-full text-center p-10 space-y-4">
-            <p className="text-sm font-semibold tracking-wider text-white/70 uppercase">Coming Soon</p>
-            <h1 className="text-3xl font-bold text-white">Token Vesting</h1>
-            <p className="text-gray-300">
-              Token vesting is almost ready. We&apos;re finalizing the experience so teams can manage vesting schedules directly from
-              Nadz Tools. Stay tuned—this section will be live shortly.
-            </p>
-          </div>
-        </div>
-      </RequireWallet>
-    );
-  }
-
   return (
     <RequireWallet>
-      <div className="min-h-screen py-8">
+      <div className="min-h-screen py-8 relative">
         <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="mb-6">
             <h1 className="text-3xl font-bold text-white mb-1">Token Vesting</h1>
@@ -407,9 +389,27 @@ export default function VestingPage() {
             </div>
           </div>
 
-          <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
+          {/* Blur overlay while coming soon - covers only main content area, not header/sidebar */}
+          {isComingSoon && (
+            <>
+              <div className="fixed top-16 left-0 right-0 lg:left-64 bottom-0 z-40 pointer-events-auto cursor-not-allowed select-none">
+                <div className="absolute inset-0 backdrop-blur-md bg-black/70" />
+                <div className="absolute inset-x-0 top-1/2 -translate-y-1/2 mx-auto max-w-2xl z-20 text-center px-6">
+                  <div className="rounded-lg border-2 border-[#8500FF] bg-[#1a0a2e] backdrop-blur-sm p-4 shadow-sm">
+                    <p className="font-semibold mb-1 text-white">Coming Soon</p>
+                    <p className="text-sm text-gray-300">
+                      Token vesting is almost ready. We&apos;re finalizing the experience so teams can manage vesting schedules directly from
+                      Nadz Tools. Stay tuned—this section will be live shortly.
+                    </p>
+                  </div>
+                </div>
+              </div>
+            </>
+          )}
+
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 relative">
             {/* Left: Form */}
-            <div className="lg:col-span-8">
+            <div className={`lg:col-span-8 ${isComingSoon ? 'blur-sm select-none pointer-events-none user-select-none' : ''}`}>
               <div className="card p-8">
                 <form onSubmit={handleSubmit(onSubmit)} className="grid grid-cols-1 md:grid-cols-2 gap-6">
                   {/* Token Address */}
@@ -618,7 +618,7 @@ export default function VestingPage() {
             </div>
 
           {/* Right: Helper Panel + Summary */}
-            <div className="lg:col-span-4 lg:sticky lg:top-24 space-y-4">
+            <div className={`lg:col-span-4 lg:sticky lg:top-24 space-y-4 ${isComingSoon ? 'blur-sm select-none pointer-events-none user-select-none' : ''}`}>
             <div className="card p-6 space-y-3">
               <h3 className="text-lg font-semibold text-white">Summary</h3>
               <div className="text-sm text-gray-300 space-y-2">

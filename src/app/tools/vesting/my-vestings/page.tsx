@@ -115,58 +115,64 @@ export default function MyVestingsPage() {
     }
   };
 
-  // Conditional return after all hooks
-  if (isComingSoon) {
-    return (
-      <RequireWallet>
-        <div className="min-h-screen flex items-center justify-center px-4 py-16">
-          <div className="card max-w-2xl w-full text-center p-10 space-y-4">
-            <p className="text-sm font-semibold tracking-wider text-white/70 uppercase">Coming Soon</p>
-            <h1 className="text-3xl font-bold text-white">My Vestings</h1>
-            <p className="text-gray-300">
-              Vesting dashboards will arrive shortly so you can track schedules and claim directly from Nadz Tools.
-              We&apos;re putting on the finishing touches—thanks for your patience!
-            </p>
+  return (
+    <RequireWallet>
+      <div className="min-h-screen py-8 relative">
+        <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="mb-8">
+            <h1 className="text-3xl font-bold text-white mb-2">My Vestings</h1>
+            <p className="text-gray-300">Manage and claim your vesting schedules.</p>
+          </div>
+
+          {/* Blur overlay while coming soon - covers only main content area, not header/sidebar */}
+          {isComingSoon && (
+            <>
+              <div className="fixed top-16 left-0 right-0 lg:left-64 bottom-0 z-40 pointer-events-auto cursor-not-allowed select-none">
+                <div className="absolute inset-0 backdrop-blur-md bg-black/70" />
+                <div className="absolute inset-x-0 top-1/2 -translate-y-1/2 mx-auto max-w-2xl z-20 text-center px-6">
+                  <div className="rounded-lg border-2 border-[#8500FF] bg-[#1a0a2e] backdrop-blur-sm p-4 shadow-sm">
+                    <p className="font-semibold text-white">Coming Soon</p>
+                  </div>
+                </div>
+              </div>
+            </>
+          )}
+
+          <div className={`card p-6 overflow-x-auto ${isComingSoon ? 'blur-sm select-none pointer-events-none user-select-none' : ''}`}>
+            {schedulesLoading ? (
+              <p className="text-gray-300">Loading vesting schedules...</p>
+            ) : schedules.length === 0 ? (
+              <p className="text-gray-300">No vesting schedules found.</p>
+            ) : (
+              <div className="space-y-3">
+                {schedules.map(({ id, s }) => {
+                  const dec = decimalsMap[s.token.toLowerCase()] ?? 18;
+                  const total = formatUnits((s.totalAmount ?? (0 as unknown as bigint)), dec);
+                  const released = formatUnits((s.released ?? (0 as unknown as bigint)), dec);
+                  return (
+                    <div key={id.toString()} className="border rounded-lg p-4 flex items-center justify-between">
+                      <div>
+                        <div className="text-sm text-gray-300">#{id.toString()}</div>
+                        <div className="font-medium">Token: {s.token}</div>
+                        <div className="text-sm">Total: {total}</div>
+                        <div className="text-sm">Released: {released}</div>
+                      </div>
+                      <button 
+                        className="btn-primary" 
+                        onClick={() => claim(id)}
+                        disabled={isLoading}
+                      >
+                        {isLoading ? 'Claiming...' : 'Claim'}
+                      </button>
+                    </div>
+                  );
+                })}
+              </div>
+            )}
           </div>
         </div>
-      </RequireWallet>
-    );
-  }
-
-  return (
-    <div className="max-w-6xl mx-auto p-8 relative z-0 pointer-events-auto">
-      <h1 className="text-2xl font-bold text-white mb-4">My Vestings</h1>
-      {schedulesLoading ? (
-        <p className="text-gray-300">Loading vesting schedules...</p>
-      ) : schedules.length === 0 ? (
-        <p className="text-gray-300">No vesting schedules found.</p>
-      ) : (
-        <div className="space-y-3">
-          {schedules.map(({ id, s }) => {
-            const dec = decimalsMap[s.token.toLowerCase()] ?? 18;
-            const total = formatUnits((s.totalAmount ?? (0 as unknown as bigint)), dec);
-            const released = formatUnits((s.released ?? (0 as unknown as bigint)), dec);
-            return (
-              <div key={id.toString()} className="border rounded-lg p-4 flex items-center justify-between">
-                <div>
-                  <div className="text-sm text-gray-300">#{id.toString()}</div>
-                  <div className="font-medium">Token: {s.token}</div>
-                  <div className="text-sm">Total: {total}</div>
-                  <div className="text-sm">Released: {released}</div>
-                </div>
-                <button 
-                  className="btn-primary" 
-                  onClick={() => claim(id)}
-                  disabled={isLoading}
-                >
-                  {isLoading ? 'Claiming...' : 'Claim'}
-                </button>
-              </div>
-            );
-          })}
-        </div>
-      )}
-    </div>
+      </div>
+    </RequireWallet>
   );
 }
 
