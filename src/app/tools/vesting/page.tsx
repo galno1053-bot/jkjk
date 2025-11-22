@@ -396,11 +396,7 @@ export default function VestingPage() {
                 <div className="absolute inset-0 backdrop-blur-md bg-black/70" />
                 <div className="absolute inset-x-0 top-1/2 -translate-y-1/2 mx-auto max-w-2xl z-20 text-center px-6">
                   <div className="rounded-lg border-2 border-[#8500FF] bg-[#1a0a2e] backdrop-blur-sm p-4 shadow-sm">
-                    <p className="font-semibold mb-1 text-white">Coming Soon</p>
-                    <p className="text-sm text-gray-300">
-                      Token vesting is almost ready. We&apos;re finalizing the experience so teams can manage vesting schedules directly from
-                      Nadz Tools. Stay tuned—this section will be live shortly.
-                    </p>
+                    <p className="font-semibold text-white">Coming Soon</p>
                   </div>
                 </div>
               </div>
