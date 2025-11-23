@@ -211,8 +211,8 @@ export default function TokenLockerPage() {
       try {
         const res = await refetchAllowance?.();
         const latestAllowance = (res?.data ?? allowance) as unknown as bigint | undefined;
-        if (typeof latestAllowance === 'bigint') {
-          setApprovedForAmount(latestAllowance >= amountInUnits);
+        if (typeof latestAllowance === 'bigint' && latestAllowance >= amountInUnits) {
+          setApprovedForAmount(true);
         }
       } catch {
         // ignore
@@ -360,7 +360,7 @@ export default function TokenLockerPage() {
                             {isApproving ? 'Approving...' : isPending ? 'Confirming...' : 'Processing...'}
                           </div>
                         ) : (
-                          'Approve Token Spending'
+                          'Approve Token'
                         )
                       ) : (
                         isLoading || isPending || isConfirming ? (
