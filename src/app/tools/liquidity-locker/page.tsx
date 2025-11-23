@@ -10,6 +10,8 @@ import { ToastContainer, type ToastProps, type ToastData } from '@/components/To
 import { explorerUrl } from '@/lib/utils';
 import liquidityLockerAbi from '@/lib/abis/liquidityLocker.json';
 
+// Schema used for type inference only
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 const liquidityLockerSchema = z.object({
   lpTokenAddress: z.string().min(42, 'Invalid LP token address').max(42, 'Invalid LP token address'),
   amount: z.string().min(1, 'Amount is required').refine((val) => !isNaN(Number(val)) && Number(val) > 0, 'Amount must be a positive number'),
@@ -17,7 +19,6 @@ const liquidityLockerSchema = z.object({
   memo: z.string().optional(),
 });
 
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
 type LiquidityLockerForm = z.infer<typeof liquidityLockerSchema>;
 
 export default function LiquidityLockerPage() {

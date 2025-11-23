@@ -1,7 +1,7 @@
 'use client';
 
 import { useEffect, useState } from 'react';
-import { useAccount, useWriteContract, useWaitForTransactionReceipt } from 'wagmi';
+import { useWriteContract, useWaitForTransactionReceipt } from 'wagmi';
 import { RequireWallet } from '@/components/RequireWallet';
 import { explorerUrl } from '@/lib/utils';
 import { formatUnits } from 'viem';
