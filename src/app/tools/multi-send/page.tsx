@@ -155,6 +155,17 @@ export default function MultiSendPage() {
     hash: approveHash,
   });
 
+  const removeToast = useCallback((id: string) => {
+    setToasts((prev) => prev.filter((toast) => toast.id !== id));
+  }, []);
+
+  const addToast = useCallback((toast: ToastData) => {
+    const id = typeof crypto !== 'undefined' && 'randomUUID' in crypto
+      ? crypto.randomUUID()
+      : Math.random().toString(36).slice(2, 11);
+    setToasts((prev) => [...prev, { ...toast, id, onClose: () => removeToast(id) }]);
+  }, [removeToast]);
+
   // Refetch allowance after successful approval
   useEffect(() => {
     if (isApproveSuccess) {
@@ -167,17 +178,6 @@ export default function MultiSendPage() {
       });
     }
   }, [isApproveSuccess, refetchAllowance, addToast]);
-
-  const removeToast = useCallback((id: string) => {
-    setToasts((prev) => prev.filter((toast) => toast.id !== id));
-  }, []);
-
-  const addToast = useCallback((toast: ToastData) => {
-    const id = typeof crypto !== 'undefined' && 'randomUUID' in crypto
-      ? crypto.randomUUID()
-      : Math.random().toString(36).slice(2, 11);
-    setToasts((prev) => [...prev, { ...toast, id, onClose: () => removeToast(id) }]);
-  }, [removeToast]);
 
   // Handle transaction success/error
   useEffect(() => {
