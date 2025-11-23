@@ -17,6 +17,7 @@ contract NadzTokenFactory {
         address indexed owner,
         string name,
         string symbol,
+        uint8 decimals,
         uint256 totalSupply
     );
     event FeeUpdated(uint256 newFee);
@@ -48,6 +49,7 @@ contract NadzTokenFactory {
     function createToken(
         string memory name,
         string memory symbol,
+        uint8 decimals,
         uint256 totalSupply,
         address tokenOwner
     ) external payable returns (address) {
@@ -55,6 +57,7 @@ contract NadzTokenFactory {
         require(bytes(symbol).length >= 2 && bytes(symbol).length <= 6, "Symbol must be 2-6 characters");
         require(totalSupply > 0, "Total supply must be greater than 0");
         require(tokenOwner != address(0), "Invalid token owner");
+        require(decimals <= 18, "Decimals must be 0-18");
         require(msg.value == feeAmount, "Incorrect fee");
 
         // Transfer fee to fee recipient
@@ -64,13 +67,13 @@ contract NadzTokenFactory {
         }
 
         // Deploy new token
-        NadzToken newToken = new NadzToken(name, symbol, totalSupply, tokenOwner);
+        NadzToken newToken = new NadzToken(name, symbol, decimals, totalSupply, tokenOwner);
         address tokenAddress = address(newToken);
         
         deployedTokens.push(tokenAddress);
         isDeployedToken[tokenAddress] = true;
 
-        emit TokenCreated(tokenAddress, msg.sender, tokenOwner, name, symbol, totalSupply);
+        emit TokenCreated(tokenAddress, msg.sender, tokenOwner, name, symbol, decimals, totalSupply);
         
         return tokenAddress;
     }

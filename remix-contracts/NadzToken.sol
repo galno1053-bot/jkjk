@@ -26,13 +26,15 @@ contract NadzToken is IERC20 {
     constructor(
         string memory name_,
         string memory symbol_,
+        uint8 decimals_,
         uint256 totalSupply_,
         address owner_
     ) {
         require(owner_ != address(0), "Invalid owner");
+        require(decimals_ <= 18, "Invalid decimals");
         _name = name_;
         _symbol = symbol_;
-        _decimals = 18;
+        _decimals = decimals_;
         owner = owner_;
         _totalSupply = totalSupply_;
         _balances[owner_] = totalSupply_;

@@ -16,6 +16,10 @@ const createTokenSchema = z.object({
   name: z.string().min(1, 'Token name is required'),
   symbol: z.string().min(2, 'Symbol must be at least 2 characters').max(6, 'Symbol must be at most 6 characters'),
   totalSupply: z.string().min(1, 'Total supply is required').refine((val) => !isNaN(Number(val)) && Number(val) > 0, 'Total supply must be a positive number'),
+  decimals: z.string().min(1, 'Decimals is required').refine((val) => {
+    const num = Number(val);
+    return Number.isInteger(num) && num >= 0 && num <= 18;
+  }, 'Decimals must be between 0 and 18'),
   owner: z.string().min(42, 'Invalid address').max(42, 'Invalid address'),
 });
 
@@ -36,6 +40,7 @@ export default function CreateTokenPage() {
     resolver: zodResolver(createTokenSchema),
     defaultValues: {
       owner: address || '',
+      decimals: '18',
     },
   });
 
@@ -76,8 +81,18 @@ export default function CreateTokenPage() {
 
     setIsLoading(true);
     try {
-      // Convert total supply to wei using viem's parseUnits (no BigInt literals)
-      const totalSupplyWithDecimals = parseUnits(data.totalSupply, 18);
+      const decimalsNum = Number(data.decimals);
+      if (!Number.isInteger(decimalsNum) || decimalsNum < 0 || decimalsNum > 18) {
+        addToast({
+          type: 'error',
+          title: 'Invalid Decimals',
+          description: 'Decimals must be an integer between 0 and 18.',
+        });
+        return;
+      }
+
+      // Convert total supply to smallest units using provided decimals
+      const totalSupplyWithDecimals = parseUnits(data.totalSupply, decimalsNum);
 
       // Validate contract address format
       const contractAddress = process.env.NEXT_PUBLIC_TOKEN_FACTORY;
@@ -95,7 +110,7 @@ export default function CreateTokenPage() {
         address: contractAddress as `0x${string}`,
         abi: tokenFactoryAbi,
         functionName: 'createToken',
-        args: [data.name, data.symbol, totalSupplyWithDecimals, data.owner as `0x${string}`],
+        args: [data.name, data.symbol, decimalsNum, totalSupplyWithDecimals, data.owner as `0x${string}`],
         value: (feeAmount as bigint) ?? parseEther('50'), // Fee for token creation
       });
 
@@ -164,11 +179,20 @@ export default function CreateTokenPage() {
                     />
                   </div>
 
-                  <FormField
+                    <FormField
                     label="Token Symbol"
                     error={errors.symbol?.message}
                     helperText="2-6 characters"
                     {...register('symbol')}
+                    required
+                  />
+
+                  <FormField
+                    label="Decimals"
+                    error={errors.decimals?.message}
+                    helperText="0-18. Determines how many decimal places the token supports."
+                    inputMode="numeric"
+                    {...register('decimals')}
                     required
                   />
 
@@ -249,6 +273,8 @@ export default function CreateTokenPage() {
                     <p className="font-semibold text-white">{watch('name') || '—'}</p>
                     <p className="text-sm text-gray-300 mt-3">Symbol</p>
                     <p className="font-semibold text-white">{watch('symbol') || '—'}</p>
+                    <p className="text-sm text-gray-300 mt-3">Decimals</p>
+                    <p className="font-semibold text-white">{watch('decimals') || '18'}</p>
                     <p className="text-sm text-gray-300 mt-3">Total Supply</p>
                     <p className="font-semibold text-white">{watch('totalSupply') || '—'}</p>
                     <p className="text-sm text-gray-300 mt-3">Owner</p>
