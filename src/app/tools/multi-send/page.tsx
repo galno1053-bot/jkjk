@@ -1,16 +1,16 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect, useCallback, useRef } from 'react';
 import { useForm, useFieldArray } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
-import { useWriteContract, useWaitForTransactionReceipt, useAccount, useSendTransaction, useReadContract } from 'wagmi';
+import { useWriteContract, useWaitForTransactionReceipt, useAccount, useReadContract } from 'wagmi';
 import { RequireWallet } from '@/components/RequireWallet';
 import { FormField } from '@/components/FormField';
 import { FileDrop } from '@/components/FileDrop';
 import { ToastContainer, type ToastProps, type ToastData } from '@/components/Toast';
 import { explorerUrl, parseCSV, parseJSON, isValidAddress } from '@/lib/utils';
-import { formatUnits, parseEther } from 'viem';
+import { formatUnits, parseUnits, parseEther } from 'viem';
 import multiSendAbi from '@/lib/abis/multiSend.json';
 import { Plus, Trash2 } from 'lucide-react';
 
@@ -46,18 +46,19 @@ export default function MultiSendPage() {
 
   // Helper function to convert decimal amount to BigInt
   const convertToBigInt = (amount: string, decimals: number = 18): bigint => {
-    const amountFloat = parseFloat(amount);
-    if (isNaN(amountFloat) || amountFloat < 0) {
-      throw new Error('Invalid amount');
+    try {
+      return parseUnits(amount, decimals);
+    } catch (error) {
+      throw new Error('Invalid amount format');
     }
-    const amountInWei = Math.floor(amountFloat * Math.pow(10, decimals));
-    return BigInt(amountInWei);
   };
-  const { writeContract, isPending: isWritePending } = useWriteContract();
-  const { sendTransaction, isPending: isSendPending } = useSendTransaction();
-  const { data: hash, isPending: isConfirming, isSuccess, isError } = useWaitForTransactionReceipt({
-    hash: undefined, // Will be set dynamically
+
+  const { writeContract, data: hash, isPending: isWritePending } = useWriteContract();
+  const { isLoading: isConfirming, isSuccess, isError } = useWaitForTransactionReceipt({
+    hash,
   });
+
+  const lastNotifiedHashRef = useRef<string | null>(null);
 
   // Read fee amount from contract
   const { data: feeAmount } = useReadContract({
@@ -88,16 +89,166 @@ export default function MultiSendPage() {
     name: 'recipients',
   });
 
-
   const recipients = watch('recipients');
+  const tokenType = watch('tokenType');
+  const tokenAddress = watch('tokenAddress');
 
-  const addToast = (toast: ToastData) => {
-    const id = Math.random().toString(36).substr(2, 9);
-    setToasts((prev) => [...prev, { ...toast, id, onClose: removeToast }]);
-  };
+  // Read token decimals for ERC20 tokens (default to 18)
+  const { data: tokenDecimals } = useReadContract({
+    address: tokenAddress as `0x${string}`,
+    abi: [
+      {
+        inputs: [],
+        name: 'decimals',
+        outputs: [{ name: '', type: 'uint8' }],
+        stateMutability: 'view',
+        type: 'function',
+      },
+    ],
+    functionName: 'decimals',
+    query: { enabled: !!tokenAddress && tokenType === 'prc20' },
+  });
+  const decimals = Number((tokenDecimals as unknown as number) ?? 18);
 
-  const removeToast = (id: string) => {
+  // Read allowance for ERC20 tokens
+  const { data: allowance, refetch: refetchAllowance } = useReadContract({
+    address: tokenAddress as `0x${string}`,
+    abi: [
+      {
+        inputs: [
+          { name: 'owner', type: 'address' },
+          { name: 'spender', type: 'address' },
+        ],
+        name: 'allowance',
+        outputs: [{ name: '', type: 'uint256' }],
+        stateMutability: 'view',
+        type: 'function',
+      },
+    ],
+    functionName: 'allowance',
+    args: address && tokenAddress && process.env.NEXT_PUBLIC_MULTISEND 
+      ? [address, process.env.NEXT_PUBLIC_MULTISEND as `0x${string}`] 
+      : undefined,
+    query: {
+      enabled: !!address && !!tokenAddress && !!process.env.NEXT_PUBLIC_MULTISEND && tokenType === 'prc20',
+    },
+  });
+
+  // Calculate total token amount needed
+  const totalTokenAmount = recipients.reduce((sum: bigint, recipient: { amount: string }) => {
+    try {
+      const amount = parseUnits(recipient.amount || '0', decimals);
+      return sum + amount;
+    } catch {
+      return sum;
+    }
+  }, BigInt(0));
+
+  const needsApproval = tokenType === 'prc20' && 
+    typeof allowance === 'bigint' && 
+    totalTokenAmount > BigInt(0) && 
+    allowance < totalTokenAmount;
+
+  const [isApproving, setIsApproving] = useState(false);
+  const { writeContract: writeApproveContract, data: approveHash } = useWriteContract();
+  const { isSuccess: isApproveSuccess } = useWaitForTransactionReceipt({
+    hash: approveHash,
+  });
+
+  // Refetch allowance after successful approval
+  useEffect(() => {
+    if (isApproveSuccess) {
+      refetchAllowance();
+      setIsApproving(false);
+      addToast({
+        type: 'success',
+        title: 'Approval Successful',
+        description: 'Token approval successful. You can now proceed with multi-send.',
+      });
+    }
+  }, [isApproveSuccess, refetchAllowance, addToast]);
+
+  const removeToast = useCallback((id: string) => {
     setToasts((prev) => prev.filter((toast) => toast.id !== id));
+  }, []);
+
+  const addToast = useCallback((toast: ToastData) => {
+    const id = typeof crypto !== 'undefined' && 'randomUUID' in crypto
+      ? crypto.randomUUID()
+      : Math.random().toString(36).slice(2, 11);
+    setToasts((prev) => [...prev, { ...toast, id, onClose: () => removeToast(id) }]);
+  }, [removeToast]);
+
+  // Handle transaction success/error
+  useEffect(() => {
+    if (isSuccess && hash && lastNotifiedHashRef.current !== hash) {
+      addToast({
+        type: 'success',
+        title: 'Multi-Send Successful!',
+        description: `Transaction confirmed! View on explorer: ${explorerUrl('', hash)}`,
+      });
+      lastNotifiedHashRef.current = hash;
+      setIsLoading(false);
+    }
+    if (isError && hash && lastNotifiedHashRef.current !== hash) {
+      addToast({
+        type: 'error',
+        title: 'Transaction Failed',
+        description: 'Transaction failed. Please try again.',
+      });
+      lastNotifiedHashRef.current = hash;
+      setIsLoading(false);
+    }
+  }, [isSuccess, isError, hash, addToast]);
+
+  // Handle approval for ERC20 tokens
+  const handleApprove = async () => {
+    if (!tokenAddress || !process.env.NEXT_PUBLIC_MULTISEND || !address) {
+      addToast({
+        type: 'error',
+        title: 'Invalid Configuration',
+        description: 'Token address or multi-send contract not configured.',
+      });
+      return;
+    }
+
+    setIsApproving(true);
+    try {
+      // Approve max uint256 to avoid repeated approvals
+      await writeApproveContract({
+        address: tokenAddress as `0x${string}`,
+        abi: [
+          {
+            inputs: [
+              { name: 'spender', type: 'address' },
+              { name: 'amount', type: 'uint256' },
+            ],
+            name: 'approve',
+            outputs: [{ name: '', type: 'bool' }],
+            stateMutability: 'nonpayable',
+            type: 'function',
+          },
+        ],
+        functionName: 'approve',
+        args: [
+          process.env.NEXT_PUBLIC_MULTISEND as `0x${string}`,
+          BigInt('0xffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff'), // Max uint256
+        ],
+      });
+      addToast({
+        type: 'info',
+        title: 'Approval Transaction Sent',
+        description: 'Please wait for approval transaction to confirm...',
+      });
+    } catch (error) {
+      console.error('Error approving tokens:', error);
+      addToast({
+        type: 'error',
+        title: 'Approval Failed',
+        description: error instanceof Error ? error.message : 'Failed to approve tokens.',
+      });
+      setIsApproving(false);
+    }
   };
 
   const handleFileSelect = async (file: File) => {
@@ -161,64 +312,80 @@ export default function MultiSendPage() {
       return;
     }
 
+    const multiSendAddress = process.env.NEXT_PUBLIC_MULTISEND;
+    if (!multiSendAddress) {
+      addToast({
+        type: 'error',
+        title: 'Multi-Send Contract Not Configured',
+        description: 'Multi-send contract address is not configured. Please contact support.',
+      });
+      return;
+    }
+
+    // Check approval for ERC20 tokens
+    if (data.tokenType === 'prc20' && needsApproval) {
+      addToast({
+        type: 'error',
+        title: 'Approval Required',
+        description: 'Please approve token spending first by clicking the "Approve Tokens" button.',
+      });
+      return;
+    }
+
     setIsLoading(true);
     try {
       const addresses = data.recipients.map(r => r.address as `0x${string}`);
-      const amounts = data.recipients.map(r => convertToBigInt(r.amount, 18));
-
+      
       if (data.tokenType === 'native') {
         // Native token (MON) sending using multi-send contract
-        const multiSendAddress = process.env.NEXT_PUBLIC_MULTISEND;
-        
-        if (!multiSendAddress) {
-          addToast({
-            type: 'error',
-            title: 'Multi-Send Contract Not Configured',
-            description: 'Multi-send contract address is not configured. Please contact support.',
-          });
-          return;
-        }
+        const amounts = data.recipients.map(r => convertToBigInt(r.amount, 18));
+        const totalAmount = amounts.reduce((sum, amount) => sum + amount, BigInt(0));
+        const fee = (feeAmount as bigint) ?? parseEther('50');
 
         addToast({
           type: 'info',
           title: 'Starting Multi-Send',
-          description: `Sending MON to ${addresses.length} recipients using multi-send contract...`,
+          description: `Sending MON to ${addresses.length} recipients...`,
         });
 
         try {
-          // Try multiSendNative first, fallback to multiSend
-          let txHash;
-          try {
-            txHash = await writeContract({
-              address: multiSendAddress as `0x${string}`,
-              abi: multiSendAbi,
-              functionName: 'multiSendNative',
-              args: [addresses, amounts],
-              value: amounts.reduce((sum, amount) => sum + amount, BigInt(0)) + ((feeAmount as bigint) ?? parseEther('50')), // Total amount + fee
-            });
-          } catch {
-            txHash = await writeContract({
-              address: multiSendAddress as `0x${string}`,
-              abi: multiSendAbi,
-              functionName: 'multiSend',
-              args: [addresses, amounts],
-              value: amounts.reduce((sum, amount) => sum + amount, BigInt(0)) + ((feeAmount as bigint) ?? parseEther('50')), // Total amount + fee
-            });
-          }
-
-          addToast({
-            type: 'success',
-            title: 'Multi-Send Transaction Sent',
-            description: `Multi-send transaction submitted. Hash: ${txHash}`,
+          await writeContract({
+            address: multiSendAddress as `0x${string}`,
+            abi: multiSendAbi,
+            functionName: 'multiSendNative',
+            args: [addresses, amounts],
+            value: totalAmount + fee,
           });
 
-        } catch (error) {
+          addToast({
+            type: 'info',
+            title: 'Transaction Submitted',
+            description: 'Waiting for confirmation...',
+          });
+        } catch (error: any) {
           console.error('Error in multi-send:', error);
-          addToast({
-            type: 'error',
-            title: 'Multi-Send Failed',
-            description: `Failed to send multi-send transaction: ${error instanceof Error ? error.message : 'Unknown error'}`,
-          });
+          
+          // Try fallback to multiSend if multiSendNative fails
+          if (error?.message?.includes('multiSendNative') || error?.shortMessage?.includes('multiSendNative')) {
+            try {
+              await writeContract({
+                address: multiSendAddress as `0x${string}`,
+                abi: multiSendAbi,
+                functionName: 'multiSend',
+                args: [addresses, amounts],
+                value: totalAmount + fee,
+              });
+              addToast({
+                type: 'info',
+                title: 'Transaction Submitted',
+                description: 'Waiting for confirmation...',
+              });
+            } catch (fallbackError) {
+              throw fallbackError;
+            }
+          } else {
+            throw error;
+          }
         }
 
       } else {
@@ -229,52 +396,41 @@ export default function MultiSendPage() {
             title: 'Token Address Required',
             description: 'Please provide a valid token contract address.',
           });
+          setIsLoading(false);
           return;
         }
 
-        const multiSendAddress = process.env.NEXT_PUBLIC_MULTISEND;
-        
-        if (!multiSendAddress) {
-          addToast({
-            type: 'error',
-            title: 'Multi-Send Contract Not Configured',
-            description: 'Multi-send contract address is not configured. Please contact support.',
-          });
-          return;
-        }
+        const amounts = data.recipients.map(r => convertToBigInt(r.amount, decimals));
+        const fee = (feeAmount as bigint) ?? parseEther('50');
 
         addToast({
           type: 'info',
           title: 'Starting Token Multi-Send',
-          description: `Sending tokens to ${addresses.length} recipients using multi-send contract...`,
+          description: `Sending tokens to ${addresses.length} recipients...`,
         });
 
         try {
-          // For PRC-20 tokens, we'll assume 18 decimals (most common)
-          // In a real implementation, you'd want to read the token's decimals
-          const tokenAmounts = data.recipients.map(r => convertToBigInt(r.amount, 18));
-          
-          const txHash = await writeContract({
+          await writeContract({
             address: multiSendAddress as `0x${string}`,
             abi: multiSendAbi,
             functionName: 'multiSendToken',
-            args: [data.tokenAddress as `0x${string}`, addresses, tokenAmounts],
-            value: (feeAmount as bigint) ?? parseEther('50'), // Fee for token multi-send
+            args: [data.tokenAddress as `0x${string}`, addresses, amounts],
+            value: fee, // Fee for token multi-send
           });
 
           addToast({
-            type: 'success',
-            title: 'Token Multi-Send Transaction Sent',
-            description: `Token multi-send transaction submitted. Hash: ${txHash}`,
+            type: 'info',
+            title: 'Transaction Submitted',
+            description: 'Waiting for confirmation...',
           });
-
         } catch (error) {
           console.error('Error in token multi-send:', error);
           addToast({
             type: 'error',
             title: 'Token Multi-Send Failed',
-            description: `Failed to send token multi-send transaction: ${error instanceof Error ? error.message : 'Unknown error'}`,
+            description: error instanceof Error ? error.message : 'Failed to send token multi-send transaction.',
           });
+          setIsLoading(false);
         }
       }
     } catch (error) {
@@ -282,15 +438,14 @@ export default function MultiSendPage() {
       addToast({
         type: 'error',
         title: 'Transaction Failed',
-        description: 'Failed to send tokens. Please try again.',
+        description: error instanceof Error ? error.message : 'Failed to send tokens. Please try again.',
       });
-    } finally {
       setIsLoading(false);
     }
   };
 
 
-  const totalAmount = recipients.reduce((sum, recipient) => {
+  const totalAmount = recipients.reduce((sum: number, recipient: { amount: string }) => {
     const amount = parseFloat(recipient.amount || '0');
     return sum + (isNaN(amount) ? 0 : amount);
   }, 0);
@@ -336,6 +491,28 @@ export default function MultiSendPage() {
                             error={errors.tokenAddress?.message}
                             {...register('tokenAddress')}
                           />
+                          {needsApproval && (
+                            <div className="mt-4 p-4 bg-yellow-900/30 border border-yellow-600 rounded-lg">
+                              <p className="text-sm text-yellow-200 mb-2">
+                                Approval required before multi-send.
+                              </p>
+                              <button
+                                type="button"
+                                onClick={handleApprove}
+                                disabled={isApproving}
+                                className="btn-secondary text-sm w-full"
+                              >
+                                {isApproving ? 'Approving...' : 'Approve Tokens'}
+                              </button>
+                            </div>
+                          )}
+                          {!needsApproval && tokenAddress && (
+                            <div className="mt-4 p-4 bg-green-900/30 border border-green-600 rounded-lg">
+                              <p className="text-sm text-green-200">
+                                ✓ Token approved and ready for multi-send
+                              </p>
+                            </div>
+                          )}
                         </div>
                       )}
                     </div>
@@ -421,16 +598,16 @@ export default function MultiSendPage() {
                   <div className="pt-2">
                     <button
                       type="submit"
-                      disabled={isLoading || isWritePending || isSendPending || recipients.length === 0}
-                      className="btn-primary w-full py-3 text-lg"
+                      disabled={isLoading || isWritePending || isConfirming || recipients.length === 0 || (tokenType === 'prc20' && needsApproval)}
+                      className="btn-primary w-full py-3 text-lg disabled:opacity-50 disabled:cursor-not-allowed"
                     >
-                      {isLoading || isWritePending || isSendPending ? (
+                      {isLoading || isWritePending || isConfirming ? (
                         <div className="flex items-center justify-center">
-                          <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-black mr-2"></div>
-                          {isLoading ? 'Preparing...' : 'Confirming...'}
+                          <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-white mr-2"></div>
+                          {isConfirming ? 'Confirming...' : 'Preparing...'}
                         </div>
                       ) : (
-                        `Send to ${recipients.length} Recipients`
+                        `Send to ${recipients.length} Recipient${recipients.length !== 1 ? 's' : ''}`
                       )}
                     </button>
                   </div>

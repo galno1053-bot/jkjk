@@ -27,6 +27,11 @@ export function useMyLocks() {
   const [locks, setLocks] = useState<MyLock[]>([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [refreshKey, setRefreshKey] = useState(0);
+
+  const refresh = () => {
+    setRefreshKey((prev) => prev + 1);
+  };
 
   useEffect(() => {
     let cancelled = false;
@@ -42,7 +47,7 @@ export function useMyLocks() {
         let lockIds = (await client.readContract({
           address: CONTRACT_ADDRESS,
           abi,
-          functionName: "locksOf",
+          functionName: "getUserLocks",
           args: [address],
         })) as bigint[];
 
@@ -182,9 +187,18 @@ export function useMyLocks() {
     return () => {
       cancelled = true;
     };
+  }, [address, client, refreshKey]);
+
+  // Auto-refresh every 10 seconds
+  useEffect(() => {
+    if (!address || !client) return;
+    const interval = setInterval(() => {
+      setRefreshKey((prev) => prev + 1);
+    }, 10000); // Refresh every 10 seconds
+    return () => clearInterval(interval);
   }, [address, client]);
 
-  return { locks, loading, error };
+  return { locks, loading, error, refresh };
 }
 
 

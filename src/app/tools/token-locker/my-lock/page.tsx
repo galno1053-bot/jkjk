@@ -29,7 +29,7 @@ export default function MyLockPage() {
   const { isLoading: isConfirming, isSuccess } = useWaitForTransactionReceipt({ hash: txHash });
 
   const locker = (process.env.NEXT_PUBLIC_TOKEN_LOCKER || '0xEb929E58B57410DC4f22cCDBaEE142Cb441B576C') as `0x${string}`;
-  const { locks, loading } = useMyLocks();
+  const { locks, loading, refresh } = useMyLocks();
 
   const safeFormat = (value?: bigint, decimals?: number, symbol?: string) => {
     try {
@@ -88,10 +88,10 @@ export default function MyLockPage() {
 
   useEffect(() => {
     if (isSuccess) {
-      fetchData();
+      refresh(); // Refresh locks from contract
       setSelected(null);
     }
-  }, [isSuccess]);
+  }, [isSuccess, refresh]);
 
   return (
     <RequireWallet>

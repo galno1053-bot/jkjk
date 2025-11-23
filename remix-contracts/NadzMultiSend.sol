@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: MIT
-pragma solidity ^0.8.23;
+pragma solidity ^0.8.20;
 
 interface IERC20 {
     function transferFrom(address from, address to, uint256 amount) external returns (bool);
@@ -8,27 +8,26 @@ interface IERC20 {
     function balanceOf(address account) external view returns (uint256);
 }
 
-contract PlasmaticMultiSendV1 {
+contract NadzMultiSend {
     address public owner;
     address payable public feeRecipient;
-    uint256 public feeAmount = 1 ether;
-
-    modifier onlyOwner() {
-        require(msg.sender == owner, "OWN");
-        _;
-    }
+    uint256 public feeAmount;
 
     event FeeUpdated(uint256 newFee);
     event FeeRecipientUpdated(address newRecipient);
     event MultiSendNative(address indexed sender, uint256 recipientCount, uint256 totalAmount);
     event MultiSendToken(address indexed sender, address indexed token, uint256 recipientCount, uint256 totalAmount);
 
-    error InvalidParams();
-    error NotOwner();
+    modifier onlyOwner() {
+        require(msg.sender == owner, "Only owner");
+        _;
+    }
 
-    constructor(address payable _feeRecipient) {
+    constructor(address payable _feeRecipient, uint256 _feeAmount) {
+        require(_feeRecipient != address(0), "Invalid fee recipient");
         owner = msg.sender;
         feeRecipient = _feeRecipient;
+        feeAmount = _feeAmount;
     }
 
     function setFeeAmount(uint256 _feeAmount) external onlyOwner {
@@ -37,79 +36,79 @@ contract PlasmaticMultiSendV1 {
     }
 
     function setFeeRecipient(address payable _feeRecipient) external onlyOwner {
-        require(_feeRecipient != address(0), "ZERO");
+        require(_feeRecipient != address(0), "Invalid fee recipient");
         feeRecipient = _feeRecipient;
         emit FeeRecipientUpdated(_feeRecipient);
     }
 
     function multiSendNative(address[] calldata recipients, uint256[] calldata amounts) external payable {
-        if (recipients.length == 0 || recipients.length != amounts.length) revert InvalidParams();
-        require(msg.value >= feeAmount, "FEE");
+        require(recipients.length > 0, "No recipients");
+        require(recipients.length == amounts.length, "Mismatched arrays");
         
         uint256 totalAmount = 0;
         for (uint256 i = 0; i < amounts.length; i++) {
+            require(recipients[i] != address(0), "Invalid recipient");
             totalAmount += amounts[i];
         }
         
-        require(msg.value >= totalAmount + feeAmount, "INSUFFICIENT");
+        require(msg.value >= totalAmount + feeAmount, "Insufficient value");
         
         if (feeAmount > 0) {
-            (bool ok, ) = feeRecipient.call{value: feeAmount}("");
-            require(ok, "FEE_TRANSFER");
+            (bool feeSuccess, ) = feeRecipient.call{value: feeAmount}("");
+            require(feeSuccess, "Fee transfer failed");
         }
         
         for (uint256 i = 0; i < recipients.length; i++) {
             (bool success, ) = recipients[i].call{value: amounts[i]}("");
-            require(success, "TRANSFER_FAILED");
+            require(success, "Transfer failed");
+        }
+        
+        uint256 excess = msg.value - totalAmount - feeAmount;
+        if (excess > 0) {
+            (bool refundSuccess, ) = msg.sender.call{value: excess}("");
+            require(refundSuccess, "Refund failed");
         }
         
         emit MultiSendNative(msg.sender, recipients.length, totalAmount);
     }
 
     function multiSend(address[] calldata recipients, uint256[] calldata amounts) external payable {
-        if (recipients.length == 0 || recipients.length != amounts.length) revert InvalidParams();
-        require(msg.value >= feeAmount, "FEE");
-        
-        uint256 totalAmount = 0;
-        for (uint256 i = 0; i < amounts.length; i++) {
-            totalAmount += amounts[i];
-        }
-        
-        require(msg.value >= totalAmount + feeAmount, "INSUFFICIENT");
-        
-        if (feeAmount > 0) {
-            (bool ok, ) = feeRecipient.call{value: feeAmount}("");
-            require(ok, "FEE_TRANSFER");
-        }
-        
-        for (uint256 i = 0; i < recipients.length; i++) {
-            (bool success, ) = recipients[i].call{value: amounts[i]}("");
-            require(success, "TRANSFER_FAILED");
-        }
-        
-        emit MultiSendNative(msg.sender, recipients.length, totalAmount);
+        multiSendNative(recipients, amounts);
     }
 
     function multiSendToken(address token, address[] calldata recipients, uint256[] calldata amounts) external payable {
-        if (recipients.length == 0 || recipients.length != amounts.length) revert InvalidParams();
-        require(msg.value == feeAmount, "FEE");
-        
-        if (feeAmount > 0) {
-            (bool ok, ) = feeRecipient.call{value: feeAmount}("");
-            require(ok, "FEE_TRANSFER");
-        }
+        require(token != address(0), "Invalid token");
+        require(recipients.length > 0, "No recipients");
+        require(recipients.length == amounts.length, "Mismatched arrays");
+        require(msg.value == feeAmount, "Incorrect fee");
         
         uint256 totalAmount = 0;
         for (uint256 i = 0; i < amounts.length; i++) {
+            require(recipients[i] != address(0), "Invalid recipient");
             totalAmount += amounts[i];
         }
         
-        require(IERC20(token).transferFrom(msg.sender, address(this), totalAmount), "TRANSFER_FROM_FAILED");
+        if (feeAmount > 0) {
+            (bool feeSuccess, ) = feeRecipient.call{value: feeAmount}("");
+            require(feeSuccess, "Fee transfer failed");
+        }
+        
+        require(IERC20(token).transferFrom(msg.sender, address(this), totalAmount), "Transfer from failed");
         
         for (uint256 i = 0; i < recipients.length; i++) {
-            require(IERC20(token).transfer(recipients[i], amounts[i]), "TRANSFER_FAILED");
+            require(IERC20(token).transfer(recipients[i], amounts[i]), "Token transfer failed");
         }
         
         emit MultiSendToken(msg.sender, token, recipients.length, totalAmount);
     }
+
+    function withdrawToken(address token, uint256 amount) external onlyOwner {
+        require(IERC20(token).transfer(msg.sender, amount), "Withdraw failed");
+    }
+
+    function withdrawNative(uint256 amount) external onlyOwner {
+        (bool success, ) = msg.sender.call{value: amount}("");
+        require(success, "Withdraw failed");
+    }
 }
+
