@@ -17,6 +17,7 @@ const liquidityLockerSchema = z.object({
   memo: z.string().optional(),
 });
 
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 type LiquidityLockerForm = z.infer<typeof liquidityLockerSchema>;
 
 export default function LiquidityLockerPage() {

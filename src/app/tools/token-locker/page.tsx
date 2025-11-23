@@ -20,6 +20,7 @@ const tokenLockerSchema = z.object({
   lockUntil: z.string().min(1, 'Lock date is required'),
 });
 
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 type TokenLockerForm = z.infer<typeof tokenLockerSchema>;
 
 export default function TokenLockerPage() {

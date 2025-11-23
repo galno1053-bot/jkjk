@@ -19,7 +19,6 @@ type LockRow = {
 };
 
 export default function MyLockPage() {
-  const { address } = useAccount();
   const [rows, setRows] = useState<LockRow[]>([]);
   const [isLoading, setIsLoading] = useState(false);
   const [selected, setSelected] = useState<bigint | null>(null);
@@ -29,7 +28,7 @@ export default function MyLockPage() {
   const { isLoading: isConfirming, isSuccess } = useWaitForTransactionReceipt({ hash: txHash });
 
   const locker = (process.env.NEXT_PUBLIC_TOKEN_LOCKER || '0xEb929E58B57410DC4f22cCDBaEE142Cb441B576C') as `0x${string}`;
-  const { locks, loading, refresh } = useMyLocks();
+  const { locks, refresh } = useMyLocks();
 
   const safeFormat = (value?: bigint, decimals?: number, symbol?: string) => {
     try {

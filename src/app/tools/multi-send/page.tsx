@@ -48,7 +48,7 @@ export default function MultiSendPage() {
   const convertToBigInt = (amount: string, decimals: number = 18): bigint => {
     try {
       return parseUnits(amount, decimals);
-    } catch (error) {
+    } catch {
       throw new Error('Invalid amount format');
     }
   };
@@ -362,11 +362,13 @@ export default function MultiSendPage() {
             title: 'Transaction Submitted',
             description: 'Waiting for confirmation...',
           });
-        } catch (error: any) {
+        } catch (error: unknown) {
           console.error('Error in multi-send:', error);
           
           // Try fallback to multiSend if multiSendNative fails
-          if (error?.message?.includes('multiSendNative') || error?.shortMessage?.includes('multiSendNative')) {
+          const errorMessage = error instanceof Error ? error.message : String(error);
+          const shortMessage = (error as { shortMessage?: string })?.shortMessage || '';
+          if (errorMessage?.includes('multiSendNative') || shortMessage?.includes('multiSendNative')) {
             try {
               await writeContract({
                 address: multiSendAddress as `0x${string}`,
