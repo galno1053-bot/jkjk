@@ -82,6 +82,7 @@ export default function VestingPage() {
       enabled: !!createdScheduleId && !!process.env.NEXT_PUBLIC_VESTING_FACTORY && !isComingSoon,
     },
   });
+  const claimableAmount = (claimable as bigint | undefined) ?? BigInt(0);
 
   // Detect selected token from form and show available wallet balance
   const tokenAddress = watch('tokenAddress') as string | undefined;
@@ -587,7 +588,7 @@ export default function VestingPage() {
                     {claimable && typeof claimable === 'bigint' && claimable > BigInt(0) ? (
                       <div className="mb-4">
                         <p className="text-blue-700 mb-2">
-                          Claimable Amount: {claimable.toString()}
+                          Claimable Amount: {claimableAmount.toString()}
                         </p>
                         <button
                           onClick={handleClaim}
