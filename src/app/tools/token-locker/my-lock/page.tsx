@@ -3,7 +3,7 @@
 import { useEffect, useState } from 'react';
 import { useWriteContract, useWaitForTransactionReceipt } from 'wagmi';
 import { RequireWallet } from '@/components/RequireWallet';
-import { explorerUrl, formatAddress } from '@/lib/utils';
+import { explorerUrl } from '@/lib/utils';
 import { formatUnits } from 'viem';
 import { useMyLocks } from './useMyLocks';
 
@@ -17,7 +17,6 @@ type LockRow = {
   decimals: number;
   symbol: string;
   owner: `0x${string}`;
-  txHash?: `0x${string}`;
 };
 
 export default function MyLockPage() {
@@ -62,7 +61,6 @@ export default function MyLockPage() {
         decimals: l.decimals,
         symbol: l.symbol,
         owner: l.owner,
-        txHash: l.txHash,
       }));
       const active = allResults.filter((r) => ((r.amount ?? BigInt(0)) - (r.withdrawn ?? BigInt(0))) > BigInt(0));
       setRows(active);
@@ -160,7 +158,6 @@ export default function MyLockPage() {
                       <th className="py-2 pr-4">Token</th>
                       <th className="py-2 pr-4">Amount</th>
                       <th className="py-2 pr-4">Unlock Time</th>
-                      <th className="py-2 pr-4">TxHash</th>
                       <th className="py-2 pr-4">Action</th>
                     </tr>
                   </thead>
@@ -178,20 +175,6 @@ export default function MyLockPage() {
                         </td>
                         <td className="py-3 pr-4">{safeFormat((row.amount ?? BigInt(0)) - (row.withdrawn ?? BigInt(0)), row.decimals, row.symbol)}</td>
                         <td className="py-3 pr-4">{new Date(Number(row?.lockUntil ?? BigInt(0)) * 1000).toLocaleString()}</td>
-                        <td className="py-3 pr-4">
-                          {row.txHash ? (
-                            <a
-                              href={explorerUrl('', row.txHash)}
-                              target="_blank"
-                              rel="noopener noreferrer"
-                              className="font-mono text-xs text-[#8500FF] hover:underline"
-                            >
-                              {formatAddress(row.txHash, 6)}
-                            </a>
-                          ) : (
-                            <span className="text-gray-500 text-xs">-</span>
-                          )}
-                        </td>
                         <td className="py-3 pr-4">
                           <div className="flex flex-wrap gap-2">
                             <button
