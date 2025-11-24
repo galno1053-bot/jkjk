@@ -1,6 +1,7 @@
 'use client';
 
 import Link from 'next/link';
+import Image from 'next/image';
 import { usePathname } from 'next/navigation';
 import { cn } from '@/lib/utils';
 import { 
@@ -100,6 +101,11 @@ export function Sidebar() {
       )}>
         <div className="flex flex-col h-full">
           <div className="flex-1 flex flex-col pt-5 pb-4 overflow-y-auto">
+            <div className="px-4 mb-4">
+              <Link href="/" className="flex items-center">
+                <Image src="/logo-nadztools.svg" alt="Nadz Tools" width={120} height={30} priority className="h-8 w-auto" />
+              </Link>
+            </div>
             <nav className="flex-1 px-2 space-y-1">
               {navigation.map((item) => {
                 if (isNavSection(item)) {
