@@ -23,6 +23,8 @@ contract NadzTokenLocker {
     
     mapping(uint256 => Lock) public locks;
     mapping(address => uint256[]) public locksOf;
+    mapping(address => uint256[]) private locksByToken;
+    mapping(address => uint256) public totalLockedByToken;
     
     event Locked(
         uint256 indexed lockId,
@@ -94,6 +96,8 @@ contract NadzTokenLocker {
         
         // Add to user's lock list
         locksOf[msg.sender].push(lockId);
+        locksByToken[token].push(lockId);
+        totalLockedByToken[token] += amount;
         
         nextLockId++;
 
@@ -109,6 +113,7 @@ contract NadzTokenLocker {
         require(available > 0, "No tokens available to withdraw");
 
         lockInfo.withdrawn += available;
+        totalLockedByToken[lockInfo.token] -= available;
         
         require(IERC20(lockInfo.token).transfer(msg.sender, available), "Transfer failed");
         
@@ -141,6 +146,10 @@ contract NadzTokenLocker {
     
     function getUserLocks(address user) external view returns (uint256[] memory) {
         return locksOf[user];
+    }
+
+    function getTokenLocks(address token) external view returns (uint256[] memory) {
+        return locksByToken[token];
     }
 }
 

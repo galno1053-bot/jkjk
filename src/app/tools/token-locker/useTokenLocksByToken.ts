@@ -9,6 +9,11 @@ import { isValidAddress } from '@/lib/utils';
 
 const CONTRACT_ADDRESS = (process.env.NEXT_PUBLIC_TOKEN_LOCKER || '0xEb929E58B57410DC4f22cCDBaEE142Cb441B576C') as `0x${string}`;
 const DEPLOY_BLOCK = BigInt(process.env.NEXT_PUBLIC_TOKEN_LOCKER_DEPLOY_BLOCK ?? '2289855');
+const LOG_CHUNK_SIZE = (() => {
+  const envValue = process.env.NEXT_PUBLIC_TOKEN_LOCKER_LOG_CHUNK;
+  const parsed = envValue ? Number(envValue) : 100;
+  return BigInt(Number.isFinite(parsed) && parsed > 0 ? parsed : 100);
+})();
 
 const LOCKED_EVENT = parseAbiItem(
   'event Locked(uint256 indexed lockId, address indexed owner, address indexed token, uint256 amount, uint256 lockUntil)'
@@ -55,6 +60,30 @@ const defaultState: TokenLockState = {
   refreshedAt: null,
 };
 
+const chunkedLogsByToken = async (
+  client: ReturnType<typeof usePublicClient>,
+  token: `0x${string}`
+) => {
+  if (!client) return [];
+  const latestBlock = await client.getBlockNumber();
+  const logs: Array<{ args: { lockId: bigint } }> = [];
+  let start = DEPLOY_BLOCK;
+
+  while (start <= latestBlock) {
+    const chunkEnd = start + LOG_CHUNK_SIZE - BigInt(1) > latestBlock ? latestBlock : start + LOG_CHUNK_SIZE - BigInt(1);
+    const chunkLogs = (await client.getLogs({
+      address: CONTRACT_ADDRESS,
+      event: LOCKED_EVENT,
+      args: { token },
+      fromBlock: start,
+      toBlock: chunkEnd,
+    })) as Array<{ args: { lockId: bigint } }>;
+    logs.push(...chunkLogs);
+    start = chunkEnd + BigInt(1);
+  }
+  return logs;
+};
+
 export function useTokenLocksByToken(tokenAddress?: string) {
   const client = usePublicClient();
   const [state, setState] = useState<TokenLockState>(defaultState);
@@ -83,28 +112,42 @@ export function useTokenLocksByToken(tokenAddress?: string) {
         const normalized = tokenAddress.toLowerCase() as `0x${string}`;
         const abi = tokenLockerAbi as unknown as Abi;
 
-        const logs = (await client.getLogs({
-          address: CONTRACT_ADDRESS,
-          event: LOCKED_EVENT,
-          args: { token: normalized },
-          fromBlock: DEPLOY_BLOCK,
-          toBlock: 'latest',
-        })) as Array<{ args: { lockId: bigint } }>;
+        let lockIds: bigint[] = [];
+        let usedDirectLookup = false;
 
-        let lockIds = logs.map((log) => log.args.lockId);
-
-        if (lockIds.length === 0) {
-          const maxId = (await client.readContract({
+        try {
+          const directResult = (await client.readContract({
             address: CONTRACT_ADDRESS,
             abi,
-            functionName: 'nextLockId',
-          })) as bigint;
-
-          const allIds: bigint[] = [];
-          for (let i = BigInt(1); i < maxId; i = i + BigInt(1)) {
-            allIds.push(i);
+            functionName: 'getTokenLocks',
+            args: [normalized],
+          })) as bigint[];
+          if (Array.isArray(directResult)) {
+            lockIds = directResult;
+            usedDirectLookup = true;
           }
-          lockIds = allIds;
+        } catch {
+          // Contract might be legacy without getTokenLocks; fallback below.
+          lockIds = [];
+        }
+
+        if (!usedDirectLookup) {
+          const logs = await chunkedLogsByToken(client, normalized);
+          lockIds = logs.map((log) => log.args.lockId);
+
+          if (lockIds.length === 0) {
+            const maxId = (await client.readContract({
+              address: CONTRACT_ADDRESS,
+              abi,
+              functionName: 'nextLockId',
+            })) as bigint;
+
+            const allIds: bigint[] = [];
+            for (let i = BigInt(1); i < maxId; i = i + BigInt(1)) {
+              allIds.push(i);
+            }
+            lockIds = allIds;
+          }
         }
 
         const locksRaw = await Promise.all(
