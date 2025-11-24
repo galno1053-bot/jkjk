@@ -1,6 +1,19 @@
 import { defineChain } from 'viem';
 
-// Monad Testnet Configuration
+export const monadMainnet = defineChain({
+  id: 143,
+  name: 'Monad Chain',
+  nativeCurrency: { name: 'Monad', symbol: 'MON', decimals: 18 },
+  rpcUrls: {
+    default: { http: ['https://rpc.monad.xyz'] },
+    public: { http: ['https://rpc.monad.xyz'] },
+  },
+  blockExplorers: {
+    default: { name: 'MonadScan', url: 'https://monadscan.com' },
+  },
+});
+
+// Simpan konfigurasi testnet agar masih bisa digunakan jika perlu
 export const monadTestnet = defineChain({
   id: 10143,
   name: 'Monad Testnet',
@@ -10,26 +23,9 @@ export const monadTestnet = defineChain({
     public: { http: ['https://testnet-rpc.monad.xyz'] },
   },
   blockExplorers: {
-    default: { name: 'Monad Explorer', url: 'https://testnet.monadexplorer.com' },
+    default: { name: 'Monad Testnet Explorer', url: 'https://testnet.monadexplorer.com' },
   },
 });
 
-// Monad Mainnet Configuration (untuk nanti saat mainnet launch)
-// Uncomment dan update ketika mainnet tersedia
-/*
-export const monadMainnet = defineChain({
-  id: 0, // TODO: Ganti dengan Chain ID Monad Mainnet
-  name: 'Monad Mainnet',
-  nativeCurrency: { name: 'Monad', symbol: 'MON', decimals: 18 },
-  rpcUrls: {
-    default: { http: ['https://rpc.monad.xyz'] }, // TODO: Ganti dengan RPC Mainnet
-    public: { http: ['https://rpc.monad.xyz'] },
-  },
-  blockExplorers: {
-    default: { name: 'Monad Explorer', url: 'https://monadexplorer.com' }, // TODO: Ganti dengan Explorer Mainnet
-  },
-});
-*/
-
-// Export default untuk backward compatibility (menggunakan testnet untuk sekarang)
-export const monadChain = monadTestnet;
+// Chain utama yang dipakai aplikasi (mainnet)
+export const monadChain = monadMainnet;

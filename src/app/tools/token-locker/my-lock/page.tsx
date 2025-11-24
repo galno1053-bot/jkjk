@@ -28,8 +28,9 @@ export default function MyLockPage() {
   const { writeContract, data: txHash, isPending } = useWriteContract();
   const { isLoading: isConfirming, isSuccess } = useWaitForTransactionReceipt({ hash: txHash });
 
-  const locker = (process.env.NEXT_PUBLIC_TOKEN_LOCKER || '0xEb929E58B57410DC4f22cCDBaEE142Cb441B576C') as `0x${string}`;
-  const { locks, refresh } = useMyLocks();
+  const lockerEnv = process.env.NEXT_PUBLIC_TOKEN_LOCKER;
+  const locker = lockerEnv ? (lockerEnv as `0x${string}`) : undefined;
+  const { locks, refresh } = useMyLocks(locker);
 
   const safeFormat = (value?: bigint, decimals?: number, symbol?: string) => {
     try {
@@ -117,6 +118,13 @@ export default function MyLockPage() {
   return (
     <RequireWallet>
       <div className="min-h-screen py-8">
+        {!locker && (
+          <div className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 mb-6">
+            <div className="p-4 rounded-md bg-red-500/10 border border-red-500/40 text-red-100 text-sm">
+              Token locker contract belum dikonfigurasi. Setel <code className="font-mono">NEXT_PUBLIC_TOKEN_LOCKER</code> di environment untuk mengakses halaman ini.
+            </div>
+          </div>
+        )}
         <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="mb-8">
             <h1 className="text-3xl font-bold text-white mb-2">My Locks</h1>

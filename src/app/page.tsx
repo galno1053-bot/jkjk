@@ -4,7 +4,7 @@ import { ArrowRight, Coins, Lock, Shield, Calendar, Send } from 'lucide-react';
 const tools = [
   {
     name: 'Token Creation',
-    description: 'Create custom tokens on Monad Testnet',
+    description: 'Create custom tokens on Monad Mainnet',
     href: '/tools/create-token',
     icon: Coins,
     color: 'bg-[#8500FF]',
@@ -49,7 +49,7 @@ export default function HomePage() {
             Nadz Tools
           </h1>
           <p className="text-xl text-gray-300 mb-8 max-w-3xl mx-auto">
-            Tools for token creation, locking, vesting, and more on Monad Testnet.
+            Tools for token creation, locking, vesting, and more on Monad Mainnet.
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
             <Link

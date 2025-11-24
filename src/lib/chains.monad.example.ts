@@ -9,14 +9,9 @@
 
 import { defineChain } from 'viem';
 
-// TODO: Ganti dengan Chain ID resmi Monad
-const MONAD_CHAIN_ID = 0; // Placeholder - ganti dengan Chain ID Monad
-
-// TODO: Ganti dengan RPC URL resmi Monad
-const MONAD_RPC_URL = 'https://rpc.monad.xyz'; // Placeholder - ganti dengan RPC URL Monad
-
-// TODO: Ganti dengan Explorer URL resmi Monad
-const MONAD_EXPLORER_URL = 'https://explorer.monad.xyz'; // Placeholder - ganti dengan Explorer URL Monad
+const MONAD_CHAIN_ID = 143;
+const MONAD_RPC_URL = 'https://rpc.monad.xyz';
+const MONAD_EXPLORER_URL = 'https://monadscan.com';
 
 export const monadMainnet = defineChain({
   id: MONAD_CHAIN_ID,
@@ -40,7 +35,7 @@ export const monadMainnet = defineChain({
 
 // Untuk testnet (jika diperlukan)
 export const monadTestnet = defineChain({
-  id: 0, // TODO: Ganti dengan Chain ID Monad Testnet
+  id: 10143,
   name: 'Monad Testnet',
   nativeCurrency: { 
     name: 'Monad', 
@@ -48,13 +43,13 @@ export const monadTestnet = defineChain({
     decimals: 18 
   },
   rpcUrls: {
-    default: { http: ['https://testnet-rpc.monad.xyz'] }, // TODO: Ganti dengan RPC Testnet
+    default: { http: ['https://testnet-rpc.monad.xyz'] },
     public: { http: ['https://testnet-rpc.monad.xyz'] },
   },
   blockExplorers: {
     default: { 
       name: 'Monad Testnet Explorer', 
-      url: 'https://testnet-explorer.monad.xyz' // TODO: Ganti dengan Explorer Testnet
+      url: 'https://testnet.monadexplorer.com'
     },
   },
 });

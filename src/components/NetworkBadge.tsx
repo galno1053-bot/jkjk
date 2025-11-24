@@ -1,11 +1,11 @@
 'use client';
 
 import { useChainId } from 'wagmi';
-import { monadTestnet } from '@/lib/chains';
+import { monadChain } from '@/lib/chains';
 
 export function NetworkBadge() {
   const chainId = useChainId();
-  const isCorrectChain = chainId === monadTestnet.id;
+  const isCorrectChain = chainId === monadChain.id;
 
   return (
     <div className={`px-3 py-1 rounded-full text-sm font-medium ${
@@ -13,11 +13,7 @@ export function NetworkBadge() {
         ? 'bg-[#f0ebf5] text-[#8500FF] border border-[#8500FF]' 
         : 'bg-red-100 text-red-800 border border-red-200'
     }`}>
-      {isCorrectChain ? (
-        `Monad Testnet • ${monadTestnet.id}`
-      ) : (
-        'Wrong Network'
-      )}
+      {isCorrectChain ? `${monadChain.name} • ${monadChain.id}` : 'Wrong Network'}
     </div>
   );
 }

@@ -2,7 +2,7 @@
 
 ## Langkah-langkah Deployment
 
-### 1. Deploy Contract ke Monad Testnet
+### 1. Deploy Contract ke Monad Mainnet
 
 #### Option A: Menggunakan Remix IDE (Recommended untuk pemula)
 
@@ -14,7 +14,7 @@
    - Klik "Compile NadzMultiSend.sol"
 5. Deploy contract:
    - Pilih tab "Deploy & Run Transactions"
-   - Environment: Pilih "Injected Provider - MetaMask" (pastikan wallet terhubung ke Monad Testnet)
+   - Environment: Pilih "Injected Provider - MetaMask" (pastikan wallet terhubung ke Monad Mainnet / Monad Chain)
    - Deploy Constructor:
      - `_feeRecipient`: Masukkan alamat wallet yang akan menerima fee (contoh: `0x...`)
      - `_feeAmount`: Masukkan jumlah fee dalam wei (contoh: `50000000000000000000` untuk 50 MON)
@@ -35,8 +35,8 @@ require("@nomicfoundation/hardhat-toolbox");
 module.exports = {
   solidity: "0.8.20",
   networks: {
-    "monad-testnet": {
-      url: "https://testnet-rpc.monad.xyz",
+    "monad-mainnet": {
+      url: "https://rpc.monad.xyz",
       accounts: [process.env.PRIVATE_KEY],
     },
   },
@@ -45,7 +45,7 @@ module.exports = {
 
 3. Deploy:
 ```bash
-FEE_RECIPIENT=0x... FEE_AMOUNT=50000000000000000000 npx hardhat run scripts/deploy-nadz-multisend.js --network monad-testnet
+FEE_RECIPIENT=0x... FEE_AMOUNT=50000000000000000000 npx hardhat run scripts/deploy-nadz-multisend.js --network monad-mainnet
 ```
 
 ### 2. Setup Environment Variable
@@ -56,7 +56,7 @@ FEE_RECIPIENT=0x... FEE_AMOUNT=50000000000000000000 npx hardhat run scripts/depl
 ```env
 NEXT_PUBLIC_MULTISEND=0x...your_contract_address_here...
 NEXT_PUBLIC_WALLET_CONNECT_PROJECT_ID=your_walletconnect_project_id
-NEXT_PUBLIC_EXPLORER=https://testnet.monadexplorer.com
+NEXT_PUBLIC_EXPLORER=https://monadscan.com
 ```
 
 3. Restart development server:
@@ -66,14 +66,14 @@ npm run dev
 
 ### 3. Verifikasi Contract (Optional tapi Recommended)
 
-1. Buka [Monad Explorer Testnet](https://testnet.monadexplorer.com)
+1. Buka [MonadScan](https://monadscan.com)
 2. Cari contract address yang sudah di-deploy
 3. Verifikasi contract dengan upload source code
 4. Verifikasi ABI (sudah tersedia di `src/lib/abis/multiSend.json`)
 
 ### 4. Testing Multi-Send
 
-1. Pastikan wallet terhubung ke Monad Testnet
+1. Pastikan wallet terhubung ke Monad Mainnet (Chain ID 143)
 2. Pastikan wallet memiliki cukup MON untuk:
    - Fee multi-send (50 MON default)
    - Jumlah yang akan di-send ke recipients

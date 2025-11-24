@@ -21,7 +21,7 @@ const ppMoriSemiBold = localFont({
 
 export const metadata: Metadata = {
   title: 'Nadz Tools',
-  description: 'Tools for Token Creation, Locking, Vesting, and more on Monad Testnet. Built for developers, teams, and projects that need reliable blockchain infrastructure.',
+  description: 'Tools for token creation, locking, vesting, and more on Monad Mainnet. Built for developers, teams, and projects that need reliable blockchain infrastructure.',
   icons: {
     icon: '/nadz-tools-logo.svg',
   },

@@ -7,8 +7,10 @@ import { parseAbiItem } from 'viem';
 import tokenLockerAbi from '@/lib/abis/tokenLocker.json';
 import { isValidAddress } from '@/lib/utils';
 
-const CONTRACT_ADDRESS = (process.env.NEXT_PUBLIC_TOKEN_LOCKER || '0xEb929E58B57410DC4f22cCDBaEE142Cb441B576C') as `0x${string}`;
-const DEPLOY_BLOCK = BigInt(process.env.NEXT_PUBLIC_TOKEN_LOCKER_DEPLOY_BLOCK ?? '2289855');
+const ZERO_ADDRESS = '0x0000000000000000000000000000000000000000';
+const LOCKER_ADDRESS = process.env.NEXT_PUBLIC_TOKEN_LOCKER;
+const CONTRACT_ADDRESS = LOCKER_ADDRESS ? (LOCKER_ADDRESS as `0x${string}`) : undefined;
+const DEPLOY_BLOCK = BigInt(process.env.NEXT_PUBLIC_TOKEN_LOCKER_DEPLOY_BLOCK ?? '0');
 const LOG_CHUNK_SIZE = (() => {
   const envValue = process.env.NEXT_PUBLIC_TOKEN_LOCKER_LOG_CHUNK;
   const parsed = envValue ? Number(envValue) : 100;
@@ -62,6 +64,7 @@ const defaultState: TokenLockState = {
 
 const chunkedLogsByToken = async (
   client: ReturnType<typeof usePublicClient>,
+  contractAddress: `0x${string}`,
   token: `0x${string}`
 ) => {
   if (!client) return [];
@@ -72,7 +75,7 @@ const chunkedLogsByToken = async (
   while (start <= latestBlock) {
     const chunkEnd = start + LOG_CHUNK_SIZE - BigInt(1) > latestBlock ? latestBlock : start + LOG_CHUNK_SIZE - BigInt(1);
     const chunkLogs = (await client.getLogs({
-      address: CONTRACT_ADDRESS,
+      address: contractAddress,
       event: LOCKED_EVENT,
       args: { token },
       fromBlock: start,
@@ -91,7 +94,7 @@ export function useTokenLocksByToken(tokenAddress?: string) {
   useEffect(() => {
     let cancelled = false;
     async function run() {
-      if (!client) {
+      if (!client || !CONTRACT_ADDRESS || CONTRACT_ADDRESS === ZERO_ADDRESS) {
         setState(defaultState);
         return;
       }
@@ -132,7 +135,7 @@ export function useTokenLocksByToken(tokenAddress?: string) {
         }
 
         if (!usedDirectLookup) {
-          const logs = await chunkedLogsByToken(client, normalized);
+          const logs = await chunkedLogsByToken(client, CONTRACT_ADDRESS, normalized);
           lockIds = logs.map((log) => log.args.lockId);
 
           if (lockIds.length === 0) {

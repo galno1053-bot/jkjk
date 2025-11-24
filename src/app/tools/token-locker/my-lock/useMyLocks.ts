@@ -18,9 +18,8 @@ export type MyLock = {
   withdrawable: bigint;
 };
 
-const CONTRACT_ADDRESS = (process.env.NEXT_PUBLIC_TOKEN_LOCKER || "0xEb929E58B57410DC4f22cCDBaEE142Cb441B576C") as `0x${string}`;
-
-export function useMyLocks() {
+export function useMyLocks(contractAddress?: `0x${string}`) {
+  const lockerAddress = contractAddress ?? (process.env.NEXT_PUBLIC_TOKEN_LOCKER as `0x${string}` | undefined);
   const { address } = useAccount();
   const client = usePublicClient();
 
@@ -36,7 +35,7 @@ export function useMyLocks() {
   useEffect(() => {
     let cancelled = false;
     async function run() {
-      if (!address || !client) {
+      if (!address || !client || !lockerAddress) {
         setLocks([]);
         return;
       }
@@ -45,7 +44,7 @@ export function useMyLocks() {
       try {
         const abi = tokenLockerAbi as unknown as Abi;
         let lockIds = (await client.readContract({
-          address: CONTRACT_ADDRESS,
+          address: lockerAddress,
           abi,
           functionName: "getUserLocks",
           args: [address],
@@ -54,7 +53,7 @@ export function useMyLocks() {
         // Fallback A: if locksOf returns empty (older deployments), scan all locks by nextLockId
         if (!lockIds || lockIds.length === 0) {
           const maxId = (await client.readContract({
-            address: CONTRACT_ADDRESS,
+            address: lockerAddress,
             abi,
             functionName: "nextLockId",
           })) as bigint;
@@ -69,7 +68,7 @@ export function useMyLocks() {
             'event Locked(uint256 indexed lockId, address indexed owner, address indexed token, uint256 amount, uint256 lockUntil)'
           );
           const logs = (await client.getLogs({
-            address: CONTRACT_ADDRESS,
+            address: lockerAddress,
             event,
             args: { owner: address },
             fromBlock: BigInt(2289855),
@@ -78,7 +77,7 @@ export function useMyLocks() {
           lockIds = logs.map((l) => l.args.lockId);
           if (!lockIds || lockIds.length === 0) {
             const allLogs = (await client.getLogs({
-              address: CONTRACT_ADDRESS,
+            address: lockerAddress,
               event,
               fromBlock: BigInt(2289855),
               toBlock: "latest",
@@ -91,7 +90,7 @@ export function useMyLocks() {
         for (const id of lockIds) {
           type LockInfo = { token: `0x${string}`; amount: bigint; withdrawn: bigint; lockUntil: bigint; owner: `0x${string}` };
           const infoRaw = (await client.readContract({
-            address: CONTRACT_ADDRESS,
+            address: lockerAddress,
             abi,
             functionName: "locks",
             args: [id],
@@ -127,7 +126,7 @@ export function useMyLocks() {
           let w: bigint = BigInt(0);
           try {
             w = (await client.readContract({
-              address: CONTRACT_ADDRESS,
+              address: lockerAddress,
               abi,
               functionName: "withdrawable",
               args: [id],
