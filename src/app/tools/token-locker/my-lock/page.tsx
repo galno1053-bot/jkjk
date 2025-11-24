@@ -16,6 +16,7 @@ type LockRow = {
   withdrawable: bigint;
   decimals: number;
   symbol: string;
+  owner: `0x${string}`;
 };
 
 export default function MyLockPage() {
@@ -59,6 +60,7 @@ export default function MyLockPage() {
         withdrawable: l.withdrawable,
         decimals: l.decimals,
         symbol: l.symbol,
+        owner: l.owner,
       }));
       const active = allResults.filter((r) => ((r.amount ?? BigInt(0)) - (r.withdrawn ?? BigInt(0))) > BigInt(0));
       setRows(active);
@@ -76,9 +78,9 @@ export default function MyLockPage() {
     return process.env.NEXT_PUBLIC_APP_BASE_URL ?? 'https://app.nadz.tools';
   };
 
-  const handleShare = async (token: `0x${string}`, lockId: bigint) => {
+  const handleShare = async (token: `0x${string}`, owner: `0x${string}`, lockId: bigint) => {
     const base = getShareBaseUrl();
-    const url = `${base}/token-locker/${token}`;
+    const url = `${base}/token-locker/${token}/${owner}`;
     if (typeof navigator !== 'undefined' && navigator.clipboard) {
       try {
         await navigator.clipboard.writeText(url);
@@ -178,7 +180,7 @@ export default function MyLockPage() {
                             <button
                               type="button"
                               className="px-3 py-1 rounded-md border border-[#8500FF] text-[#8500FF] hover:bg-[#8500FF]/10 transition"
-                              onClick={() => handleShare(row.token, row.lockId)}
+                              onClick={() => handleShare(row.token, row.owner, row.lockId)}
                             >
                               {copiedLockId === row.lockId ? 'Link Copied' : 'Share'}
                             </button>

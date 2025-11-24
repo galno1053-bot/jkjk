@@ -87,7 +87,7 @@ const chunkedLogsByToken = async (
   return logs;
 };
 
-export function useTokenLocksByToken(tokenAddress?: string) {
+export function useTokenLocksByToken(tokenAddress?: string, ownerAddress?: string) {
   const client = usePublicClient();
   const [state, setState] = useState<TokenLockState>(defaultState);
 
@@ -109,10 +109,18 @@ export function useTokenLocksByToken(tokenAddress?: string) {
         });
         return;
       }
+      if (ownerAddress && !isValidAddress(ownerAddress)) {
+        setState({
+          ...defaultState,
+          error: 'Invalid owner address',
+        });
+        return;
+      }
 
       setState((prev) => ({ ...prev, isLoading: true, error: null }));
       try {
         const normalized = tokenAddress.toLowerCase() as `0x${string}`;
+        const normalizedOwner = ownerAddress ? ownerAddress.toLowerCase() as `0x${string}` : undefined;
         const abi = tokenLockerAbi as unknown as Abi;
 
         let lockIds: bigint[] = [];
@@ -207,7 +215,12 @@ export function useTokenLocksByToken(tokenAddress?: string) {
           })
         );
 
-        const locks = locksRaw.filter(Boolean) as TokenLockDetails[];
+        let locks = locksRaw.filter(Boolean) as TokenLockDetails[];
+
+        // Filter by owner if ownerAddress is provided
+        if (normalizedOwner) {
+          locks = locks.filter((lock) => lock.owner.toLowerCase() === normalizedOwner);
+        }
 
         let decimals = 18;
         try {
@@ -271,7 +284,7 @@ export function useTokenLocksByToken(tokenAddress?: string) {
     return () => {
       cancelled = true;
     };
-  }, [client, tokenAddress]);
+  }, [client, tokenAddress, ownerAddress]);
 
   return state;
 }
