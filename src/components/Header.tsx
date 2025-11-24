@@ -1,7 +1,6 @@
 'use client';
 
 import Link from 'next/link';
-import Image from 'next/image';
 import { ConnectButton } from '@rainbow-me/rainbowkit';
 
 export function Header() {
@@ -10,7 +9,7 @@ export function Header() {
       <div className="flex h-16 items-center justify-between px-6">
         <div className="flex items-center">
           <Link href="/" className="flex items-center">
-            <Image src="/logo-nadztools.svg" alt="Nadz Tools" width={160} height={40} priority className="h-10 w-auto" />
+            <img src="/logo-nadztools.svg" alt="Nadz Tools" className="h-10 w-auto" />
           </Link>
         </div>
         
