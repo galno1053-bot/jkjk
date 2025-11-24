@@ -22,6 +22,7 @@ export default function MyLockPage() {
   const [rows, setRows] = useState<LockRow[]>([]);
   const [isLoading, setIsLoading] = useState(false);
   const [selected, setSelected] = useState<bigint | null>(null);
+  const [copiedLockId, setCopiedLockId] = useState<bigint | null>(null);
   const [totalLocksCount, setTotalLocksCount] = useState(0);
   const [totalUnlockCount, setTotalUnlockCount] = useState(0);
   const { writeContract, data: txHash, isPending } = useWriteContract();
@@ -64,6 +65,27 @@ export default function MyLockPage() {
       setTotalUnlockCount(active.filter((r) => (r.withdrawable ?? BigInt(0)) > BigInt(0)).length);
     } finally {
       setIsLoading(false);
+    }
+  };
+
+  const getShareBaseUrl = () => {
+    if (typeof window !== 'undefined' && window.location?.origin) {
+      return window.location.origin;
+    }
+    return process.env.NEXT_PUBLIC_APP_BASE_URL ?? 'https://beta.app.nadz.tools';
+  };
+
+  const handleShare = async (token: `0x${string}`, lockId: bigint) => {
+    const base = getShareBaseUrl();
+    const url = `${base}/token-locker/${token}`;
+    if (typeof navigator !== 'undefined' && navigator.clipboard) {
+      try {
+        await navigator.clipboard.writeText(url);
+        setCopiedLockId(lockId);
+        setTimeout(() => setCopiedLockId(null), 1500);
+      } catch {
+        setCopiedLockId(null);
+      }
     }
   };
 
@@ -144,13 +166,22 @@ export default function MyLockPage() {
                         <td className="py-3 pr-4">{safeFormat((row.amount ?? BigInt(0)) - (row.withdrawn ?? BigInt(0)), row.decimals, row.symbol)}</td>
                         <td className="py-3 pr-4">{new Date(Number(row?.lockUntil ?? BigInt(0)) * 1000).toLocaleString()}</td>
                         <td className="py-3 pr-4">
-                          <button
-                            className="btn-primary px-3 py-1"
-                            disabled={row.withdrawable === BigInt(0) || isPending || isConfirming}
-                            onClick={() => onWithdraw(row.lockId)}
-                          >
-                            {selected === row.lockId && (isPending || isConfirming) ? 'Withdrawing...' : 'Withdraw'}
-                          </button>
+                          <div className="flex flex-wrap gap-2">
+                            <button
+                              type="button"
+                              className="px-3 py-1 rounded-md border border-[#8500FF] text-[#8500FF] hover:bg-[#8500FF]/10 transition"
+                              onClick={() => handleShare(row.token, row.lockId)}
+                            >
+                              {copiedLockId === row.lockId ? 'Link Copied' : 'Share'}
+                            </button>
+                            <button
+                              className="btn-primary px-3 py-1"
+                              disabled={row.withdrawable === BigInt(0) || isPending || isConfirming}
+                              onClick={() => onWithdraw(row.lockId)}
+                            >
+                              {selected === row.lockId && (isPending || isConfirming) ? 'Withdrawing...' : 'Withdraw'}
+                            </button>
+                          </div>
                         </td>
                       </tr>
                     ))}
