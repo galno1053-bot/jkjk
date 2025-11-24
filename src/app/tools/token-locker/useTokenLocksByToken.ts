@@ -99,7 +99,7 @@ export function useTokenLocksByToken(tokenAddress?: string, ownerAddress?: strin
         return;
       }
       if (!tokenAddress) {
-        setState((prev) => ({ ...defaultState, isLoading: false }));
+        setState({ ...defaultState, isLoading: false });
         return;
       }
       if (!isValidAddress(tokenAddress)) {

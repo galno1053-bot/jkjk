@@ -67,7 +67,7 @@ export function useMyLocks(contractAddress?: `0x${string}`) {
         const event = parseAbiItem(
           'event Locked(uint256 indexed lockId, address indexed owner, address indexed token, uint256 amount, uint256 lockUntil)'
         );
-        let lockTxMap = new Map<bigint, `0x${string}`>();
+        const lockTxMap = new Map<bigint, `0x${string}`>();
         
         try {
           // Get all Locked events for this owner
@@ -205,7 +205,7 @@ export function useMyLocks(contractAddress?: `0x${string}`) {
     return () => {
       cancelled = true;
     };
-  }, [address, client, refreshKey]);
+  }, [address, client, refreshKey, lockerAddress]);
 
   // Auto-refresh every 10 seconds
   useEffect(() => {

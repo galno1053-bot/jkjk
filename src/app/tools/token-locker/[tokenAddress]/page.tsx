@@ -8,7 +8,7 @@ type PageProps = {
   };
 };
 
-export default function TokenLockProofPage({ params }: PageProps) {
+export default function TokenLockProofPage(_props: PageProps) {
 
   return (
     <div className="min-h-screen py-8">
