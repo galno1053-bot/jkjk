@@ -16,6 +16,7 @@ export type MyLock = {
   unlockAt: bigint;
   owner: `0x${string}`;
   withdrawable: bigint;
+  txHash?: `0x${string}`;
 };
 
 export function useMyLocks(contractAddress?: `0x${string}`) {
@@ -62,28 +63,45 @@ export function useMyLocks(contractAddress?: `0x${string}`) {
           lockIds = allIds;
         }
 
-        // Fallback B: if still nothing after scanning (or contract is huge), read event logs for owner
-        if (!lockIds || lockIds.length === 0) {
-          const event = parseAbiItem(
-            'event Locked(uint256 indexed lockId, address indexed owner, address indexed token, uint256 amount, uint256 lockUntil)'
-          );
-          const logs = (await client.getLogs({
+        // Fetch transaction hashes from event logs
+        const event = parseAbiItem(
+          'event Locked(uint256 indexed lockId, address indexed owner, address indexed token, uint256 amount, uint256 lockUntil)'
+        );
+        let lockTxMap = new Map<bigint, `0x${string}`>();
+        
+        try {
+          // Get all Locked events for this owner
+          const logs = await client.getLogs({
             address: lockerAddress,
             event,
             args: { owner: address },
             fromBlock: BigInt(2289855),
             toBlock: "latest",
-          })) as unknown as Array<{ args: { lockId: bigint } }>;
-          lockIds = logs.map((l) => l.args.lockId);
-          if (!lockIds || lockIds.length === 0) {
-            const allLogs = (await client.getLogs({
-            address: lockerAddress,
+          }) as Array<{ args: { lockId: bigint }; transactionHash: `0x${string}` }>;
+          
+          logs.forEach((log) => {
+            if (log.transactionHash && log.args?.lockId) {
+              lockTxMap.set(log.args.lockId, log.transactionHash);
+            }
+          });
+          
+          // If no logs found with owner filter, try without filter and filter manually
+          if (logs.length === 0) {
+            const allLogs = await client.getLogs({
+              address: lockerAddress,
               event,
               fromBlock: BigInt(2289855),
               toBlock: "latest",
-            })) as unknown as Array<{ args: { lockId: bigint; owner: `0x${string}` } }>;
-            lockIds = allLogs.filter((l) => l.args && String(l.args.owner).toLowerCase() === address.toLowerCase()).map((l) => l.args.lockId);
+            }) as Array<{ args: { lockId: bigint; owner: `0x${string}` }; transactionHash: `0x${string}` }>;
+            
+            allLogs.forEach((log) => {
+              if (log.transactionHash && log.args?.owner?.toLowerCase() === address.toLowerCase() && log.args?.lockId) {
+                lockTxMap.set(log.args.lockId, log.transactionHash);
+              }
+            });
           }
+        } catch {
+          // If fetching logs fails, continue without txHash
         }
 
         const result: MyLock[] = [];
@@ -173,6 +191,7 @@ export function useMyLocks(contractAddress?: `0x${string}`) {
             unlockAt: info.lockUntil,
             owner: info.owner,
             withdrawable: w,
+            txHash: lockTxMap.get(id),
           });
         }
         if (!cancelled) setLocks(result);
