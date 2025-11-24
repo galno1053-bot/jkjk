@@ -195,7 +195,6 @@ export default function TokenLockProofPage({ params }: PageProps) {
                 <table className="min-w-full text-sm text-white">
                   <thead>
                     <tr className="text-left text-gray-300">
-                      <th className="py-2 pr-4">Lock ID</th>
                       <th className="py-2 pr-4">Owner</th>
                       <th className="py-2 pr-4">Amount</th>
                       <th className="py-2 pr-4">Unlock Time</th>
@@ -208,9 +207,6 @@ export default function TokenLockProofPage({ params }: PageProps) {
                       const label = statusLabel(lock.lockUntil, remaining);
                       return (
                         <tr key={String(lock.lockId)} className="border-t border-[#8500FF]/20">
-                          <td className="py-3 pr-4 font-mono">
-                            #{lock.lockId.toString()}
-                          </td>
                           <td className="py-3 pr-4">
                             <div className="flex items-center gap-2">
                               <span className="font-mono">{formatAddress(lock.owner)}</span>

@@ -7,7 +7,6 @@ const nextConfig: NextConfig = {
       { source: '/create-token', destination: '/tools/create-token' },
       { source: '/token-locker/token-lock', destination: '/tools/token-locker/token-lock' },
       { source: '/token-locker/my-lock', destination: '/tools/token-locker/my-lock' },
-      { source: '/token-locker/:tokenAddress', destination: '/tools/token-locker/:tokenAddress' },
       { source: '/token-locker/:tokenAddress/:ownerAddress', destination: '/tools/token-locker/:tokenAddress/:ownerAddress' },
       { source: '/liquidity-locker', destination: '/tools/liquidity-locker' },
       { source: '/liquidity-locker/my-lock', destination: '/tools/liquidity-locker/my-lock' },
