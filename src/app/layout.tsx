@@ -24,6 +24,8 @@ export const metadata: Metadata = {
   description: 'Tools for token creation, locking, vesting, and more on Monad Mainnet. Built for developers, teams, and projects that need reliable blockchain infrastructure.',
   icons: {
     icon: '/logo-nadztools.svg',
+    shortcut: '/logo-nadztools.svg',
+    apple: '/logo-nadztools.svg',
   },
 };
 
