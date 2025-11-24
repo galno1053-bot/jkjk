@@ -43,6 +43,7 @@ export default function MultiSendPage() {
   const [isLoading, setIsLoading] = useState(false);
   const [useSequential, setUseSequential] = useState(true); // Default to sequential for native tokens
   const { address } = useAccount();
+  const isComingSoon = process.env.NEXT_PUBLIC_MULTISEND_COMING_SOON === 'true';
 
   // Helper function to convert decimal amount to BigInt
   const convertToBigInt = (amount: string, decimals: number = 18): bigint => {
@@ -454,7 +455,7 @@ export default function MultiSendPage() {
 
   return (
     <RequireWallet>
-      <div className="min-h-screen py-8">
+      <div className="min-h-screen py-8 relative">
         <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="mb-8">
             <h1 className="text-3xl font-bold text-white mb-2">Multi-Send</h1>
@@ -463,10 +464,25 @@ export default function MultiSendPage() {
             </p>
           </div>
 
+          {isComingSoon && (
+            <>
+              <div className="fixed top-16 left-0 right-0 lg:left-64 bottom-0 z-40 pointer-events-auto cursor-not-allowed select-none">
+                <div className="absolute inset-0 backdrop-blur-md bg-black/70" />
+                <div className="absolute inset-x-0 top-1/2 -translate-y-1/2 mx-auto max-w-2xl z-20 text-center px-6">
+                  <div className="rounded-lg border-2 border-[#8500FF] bg-[#1a0a2e] backdrop-blur-sm p-4 shadow-sm">
+                    <p className="font-semibold mb-1 text-white">Coming Soon</p>
+                    <p className="text-sm text-gray-300">
+                      Multi-Send is not available yet. Please check back later.
+                    </p>
+                  </div>
+                </div>
+              </div>
+            </>
+          )}
 
-          <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 relative">
             {/* Left: Form */}
-            <div className="lg:col-span-8">
+            <div className={`lg:col-span-8 ${isComingSoon ? 'blur-sm select-none pointer-events-none user-select-none' : ''}`}>
               <div className="card p-8">
                 <form onSubmit={handleSubmit(onSubmit)} className="space-y-8">
                   {/* Token Selection */}
@@ -619,7 +635,7 @@ export default function MultiSendPage() {
             </div>
 
             {/* Right: Summary Panel */}
-            <div className="lg:col-span-4">
+            <div className={`lg:col-span-4 ${isComingSoon ? 'blur-sm select-none pointer-events-none user-select-none' : ''}`}>
               <div className="card p-6 lg:sticky lg:top-24 space-y-4">
                 <h3 className="text-lg font-semibold text-white">Summary</h3>
                 

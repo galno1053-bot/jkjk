@@ -24,7 +24,7 @@ type LiquidityLockerForm = z.infer<typeof liquidityLockerSchema>;
 export default function LiquidityLockerPage() {
   const [toasts, setToasts] = useState<ToastProps[]>([]);
   const [isLoading, setIsLoading] = useState(false);
-  const isComingSoon = true; // Toggle: blur UI while feature is not ready
+  const isComingSoon = process.env.NEXT_PUBLIC_LIQUIDITY_LOCKER_COMING_SOON === 'true';
 
   const {
     register,
