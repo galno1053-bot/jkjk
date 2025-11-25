@@ -36,6 +36,7 @@ const navigation: NavItem[] = [
     children: [
       { name: 'Create Lock', href: '/token-locker/token-lock' },
       { name: 'My Locks', href: '/token-locker/my-lock' },
+      { name: 'Token Locker V1', href: 'https://v1.app.nadz.tools/' },
     ],
   },
   {
@@ -66,7 +67,9 @@ export function Sidebar() {
   useEffect(() => {
     navigation.forEach((item) => {
       if ('children' in item && item.children) {
-        const anyActive = item.children.some((child) => pathname.startsWith(child.href));
+        const anyActive = item.children.some((child) => 
+          !child.href.startsWith('http') && pathname.startsWith(child.href)
+        );
         if (anyActive) {
           setOpenSections((prev) => ({ ...prev, [item.name]: true }));
         }
@@ -104,7 +107,9 @@ export function Sidebar() {
               {navigation.map((item) => {
                 if (isNavSection(item)) {
                   const isSectionOpen = !!openSections[item.name];
-                  const isSectionActive = item.children.some((child) => pathname.startsWith(child.href));
+                  const isSectionActive = item.children.some((child) => 
+                    !child.href.startsWith('http') && pathname.startsWith(child.href)
+                  );
                   return (
                     <div key={item.name} className="space-y-1">
                       <button
@@ -137,15 +142,36 @@ export function Sidebar() {
                       {isSectionOpen && (
                         <div className="pl-9 space-y-1">
                           {item.children.map((child) => {
-                            const isActive = pathname === child.href;
+                            const isActive = !child.href.startsWith('http') && pathname === child.href;
+                            const isExternal = child.href.startsWith('http');
+                            const className = cn(
+                              'group flex items-center px-2 py-2 text-sm font-medium rounded-md transition-colors',
+                              isActive ? 'bg-[#8500FF] text-white' : 'text-gray-300 hover:bg-black/40 hover:text-white'
+                            );
+                            
+                            if (isExternal) {
+                              return (
+                                <a
+                                  key={child.name}
+                                  href={child.href}
+                                  target="_blank"
+                                  rel="noopener noreferrer"
+                                  className={className}
+                                  onClick={() => {
+                                    setIsOpen(false);
+                                  }}
+                                >
+                                  <span className="mr-3 h-5 w-5" />
+                                  {child.name}
+                                </a>
+                              );
+                            }
+                            
                             return (
                               <Link
                                 key={child.name}
                                 href={child.href}
-                                className={cn(
-                                  'group flex items-center px-2 py-2 text-sm font-medium rounded-md transition-colors',
-                                  isActive ? 'bg-[#8500FF] text-white' : 'text-gray-300 hover:bg-black/40 hover:text-white'
-                                )}
+                                className={className}
                                 onClick={() => {
                                   setIsOpen(false);
                                 }}
