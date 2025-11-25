@@ -413,6 +413,7 @@ export default function TokenLockerPage() {
 
                 <h3 className="text-lg font-semibold text-white">Tips</h3>
                 <ul className="text-sm text-gray-300 list-disc pl-5 space-y-1">
+                  <li className="text-red-400 font-medium">⚠️ Do not lock tokens with tax / fee-on-transfer / rebasing tokens.</li>
                   <li>Ensure your token supports `approve` for the locker.</li>
                   <li>Use a future date for `Lock Until`.</li>
                   <li>Make sure you have enough MON for the locking fee.</li>
