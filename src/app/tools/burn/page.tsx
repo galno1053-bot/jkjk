@@ -245,7 +245,7 @@ export default function BurnPage() {
                     {tokenAddress && isValidAddress(tokenAddress) && balance !== undefined && (
                       <div className="mt-4 p-4 bg-black/40 backdrop-blur-sm border border-[#8500FF]/30 rounded-lg">
                         <p className="text-sm text-gray-300">Your Balance</p>
-                        <p className="text-lg font-bold text-white">{balanceFormatted} tokens</p>
+                        <p className="text-lg font-bold text-white break-all break-words overflow-wrap-anywhere">{balanceFormatted} tokens</p>
                       </div>
                     )}
                   </div>
@@ -306,7 +306,7 @@ export default function BurnPage() {
               <div className="card p-6 lg:sticky lg:top-24 space-y-4">
                 <h3 className="text-lg font-semibold text-white">Summary</h3>
                 
-                <div className="bg-black/40 backdrop-blur-sm border border-[#8500FF]/30 rounded-lg p-4">
+                <div className="bg-black/40 backdrop-blur-sm border border-[#8500FF]/30 rounded-lg p-4 overflow-hidden">
                   <p className="text-sm text-gray-300">Token Address</p>
                   <p className="text-xs font-mono text-white break-all mt-1">
                     {tokenAddress || 'Not specified'}
@@ -314,15 +314,15 @@ export default function BurnPage() {
                   {tokenAddress && isValidAddress(tokenAddress) && (
                     <>
                       <p className="text-sm text-gray-300 mt-4">Your Balance</p>
-                      <p className="text-lg font-bold text-white">{balanceFormatted}</p>
+                      <p className="text-lg font-bold text-white break-words overflow-wrap-anywhere min-w-0">{balanceFormatted}</p>
                       <p className="text-sm text-gray-300 mt-4">Amount to Burn</p>
-                      <p className="text-lg font-bold text-white">
+                      <p className="text-lg font-bold text-white break-words overflow-wrap-anywhere min-w-0">
                         {amount && !isNaN(Number(amount)) ? Number(amount).toLocaleString() : '0'} tokens
                       </p>
                       {amount && !isNaN(Number(amount)) && balance && (
                         <>
                           <p className="text-sm text-gray-300 mt-4">Balance After Burn</p>
-                          <p className="text-lg font-bold text-white">
+                          <p className="text-lg font-bold text-white break-words overflow-wrap-anywhere min-w-0">
                             {(Number(balanceFormatted) - Number(amount)).toLocaleString()} tokens
                           </p>
                         </>
