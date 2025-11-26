@@ -10,6 +10,7 @@ import {
   Shield, 
   Calendar, 
   Send,
+  Flame,
   Menu,
   X,
   ChevronDown
@@ -56,6 +57,7 @@ const navigation: NavItem[] = [
     ],
   },
   { name: 'Multi-Send', href: '/multi-send', icon: Send },
+  { name: 'Burn', href: '/burn', icon: Flame },
 ];
 
 export function Sidebar() {

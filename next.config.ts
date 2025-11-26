@@ -13,6 +13,7 @@ const nextConfig: NextConfig = {
       { source: '/token-vesting/create-vesting', destination: '/tools/vesting' },
       { source: '/token-vesting/my-vesting', destination: '/tools/vesting/my-vestings' },
       { source: '/multi-send', destination: '/tools/multi-send' },
+      { source: '/burn', destination: '/tools/burn' },
     ];
   },
 };
