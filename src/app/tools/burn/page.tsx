@@ -58,7 +58,6 @@ const erc20Abi = [
 export default function BurnPage() {
   const [toasts, setToasts] = useState<ToastProps[]>([]);
   const [isLoading, setIsLoading] = useState(false);
-  const [hasBurnFunction, setHasBurnFunction] = useState<boolean | null>(null);
   const { address } = useAccount();
 
   const {
@@ -96,17 +95,6 @@ export default function BurnPage() {
     query: { enabled: !!address && !!tokenAddress && isValidAddress(tokenAddress) },
   });
 
-  // Check if token has burn function
-  useEffect(() => {
-    if (!tokenAddress || !isValidAddress(tokenAddress)) {
-      setHasBurnFunction(null);
-      return;
-    }
-
-    // Try to read burn function (this will fail if it doesn't exist)
-    // We'll check this when user tries to burn
-    setHasBurnFunction(null);
-  }, [tokenAddress]);
 
   const { writeContract, data: hash, isPending: isWritePending } = useWriteContract();
   const { isLoading: isConfirming, isSuccess, isError } = useWaitForTransactionReceipt({
@@ -198,8 +186,7 @@ export default function BurnPage() {
           functionName: 'burn',
           args: [amountInUnits],
         });
-        setHasBurnFunction(true);
-      } catch (burnError) {
+      } catch {
         // If burn function doesn't exist or fails, use transfer to dead address
         // This is the standard way to burn tokens for most ERC20 contracts
         console.log('Burn function not available, using transfer to dead address');
@@ -209,7 +196,6 @@ export default function BurnPage() {
           functionName: 'transfer',
           args: [BURN_ADDRESS, amountInUnits],
         });
-        setHasBurnFunction(false);
       }
 
       addToast({
@@ -351,7 +337,7 @@ export default function BurnPage() {
                     <li>Tokens are sent to a dead address (0x...dEaD)</li>
                     <li>This permanently removes them from circulation</li>
                     <li>The action cannot be undone</li>
-                    <li>You'll need to pay gas fees for the transaction</li>
+                    <li>You&apos;ll need to pay gas fees for the transaction</li>
                   </ul>
                 </div>
               </div>
