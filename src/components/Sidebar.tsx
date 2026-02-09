@@ -37,7 +37,6 @@ const navigation: NavItem[] = [
     children: [
       { name: 'Create Lock', href: '/token-locker/token-lock' },
       { name: 'My Locks', href: '/token-locker/my-lock' },
-      { name: 'Token Locker V1', href: 'https://v1.app.megalokify.com/' },
     ],
   },
   {
