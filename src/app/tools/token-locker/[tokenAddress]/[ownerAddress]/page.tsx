@@ -13,7 +13,7 @@ type PageProps = {
   };
 };
 
-const SHARE_BASE_FALLBACK = process.env.NEXT_PUBLIC_APP_BASE_URL ?? 'https://app.nadz.tools';
+const SHARE_BASE_FALLBACK = process.env.NEXT_PUBLIC_APP_BASE_URL ?? 'https://app.megalokify.com';
 
 const statusLabel = (lockUntil: bigint, remaining: bigint) => {
   if (remaining <= BigInt(0)) {

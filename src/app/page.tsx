@@ -46,7 +46,7 @@ export default function HomePage() {
         {/* Hero Section */}
         <div className="text-center mb-16 flex flex-col items-center justify-center min-h-[60vh]">
           <h1 className="text-4xl md:text-6xl font-bold text-white mb-6">
-            Nadz Tools
+            MegaLokify
           </h1>
           <p className="text-xl text-gray-300 mb-8 max-w-3xl mx-auto">
             Tools for token creation, locking, vesting, and more on Monad Mainnet.
@@ -60,7 +60,7 @@ export default function HomePage() {
               <ArrowRight className="ml-2 h-5 w-5" />
             </Link>
             <a
-              href="https://docs.nadz.tools"
+              href="https://docs.megalokify.com"
               target="_blank"
               rel="noopener noreferrer"
               className="btn-secondary text-lg px-8 py-3 inline-flex items-center justify-center"

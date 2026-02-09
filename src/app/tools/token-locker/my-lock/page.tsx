@@ -75,7 +75,7 @@ export default function MyLockPage() {
     if (typeof window !== 'undefined' && window.location?.origin) {
       return window.location.origin;
     }
-    return process.env.NEXT_PUBLIC_APP_BASE_URL ?? 'https://app.nadz.tools';
+    return process.env.NEXT_PUBLIC_APP_BASE_URL ?? 'https://app.megalokify.com';
   };
 
   const handleShare = async (token: `0x${string}`, owner: `0x${string}`, lockId: bigint) => {

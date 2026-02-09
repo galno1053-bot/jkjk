@@ -20,7 +20,7 @@ const ppMoriSemiBold = localFont({
 });
 
 export const metadata: Metadata = {
-  title: 'Nadz Tools',
+  title: 'MegaLokify',
   description: 'Tools for token creation, locking, vesting, and more on Monad Mainnet. Built for developers, teams, and projects that need reliable blockchain infrastructure.',
   icons: {
     icon: [
