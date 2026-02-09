@@ -1,7 +1,7 @@
 'use client';
 
 import { useAccount, useChainId, useSwitchChain } from 'wagmi';
-import { monadChain } from '@/lib/chains';
+import { megaEthChain } from '@/lib/chains';
 import { ConnectButton } from '@rainbow-me/rainbowkit';
 
 interface RequireWalletProps {
@@ -25,7 +25,7 @@ export function RequireWallet({ children }: RequireWalletProps) {
             </div>
             <h2 className="text-2xl font-bold text-white mb-2">Connect Your Wallet</h2>
             <p className="text-gray-300">
-              Connect your wallet to use tools on Monad Chain.
+              Connect your wallet to use tools on MegaETH.
             </p>
           </div>
           <div className="flex justify-center">
@@ -36,7 +36,7 @@ export function RequireWallet({ children }: RequireWalletProps) {
     );
   }
 
-  if (chainId !== monadChain.id) {
+  if (chainId !== megaEthChain.id) {
     return (
       <div className="min-h-screen flex items-center justify-center">
         <div className="max-w-md w-full bg-black/40 backdrop-blur-sm rounded-lg shadow-lg border border-white/20 p-8 text-center">
@@ -48,13 +48,13 @@ export function RequireWallet({ children }: RequireWalletProps) {
             </div>
             <h2 className="text-2xl font-bold text-white mb-2">Wrong Network</h2>
             <p className="text-gray-300 mb-4">
-              Please switch to {monadChain.name} to use these tools.
+              Please switch to {megaEthChain.name} to use these tools.
             </p>
             <button
-              onClick={() => switchChain({ chainId: monadChain.id })}
+              onClick={() => switchChain({ chainId: megaEthChain.id })}
               className="btn-primary w-full"
             >
-              Switch to {monadChain.name}
+              Switch to {megaEthChain.name}
             </button>
           </div>
         </div>

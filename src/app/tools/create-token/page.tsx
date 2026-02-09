@@ -162,7 +162,7 @@ export default function CreateTokenPage() {
           <div className="mb-8">
             <h1 className="text-3xl font-bold text-white mb-2">Create Token</h1>
             <p className="text-gray-300">
-              Deploy a new ERC-20 token on Monad Mainnet with custom parameters.
+              Deploy a new ERC-20 token on MegaETH Mainnet with custom parameters.
             </p>
           </div>
 
@@ -317,6 +317,7 @@ export default function CreateTokenPage() {
     </RequireWallet>
   );
 }
+
 
 
 

@@ -1,24 +1,24 @@
 /**
- * CONTOH KONFIGURASI UNTUK MONAD NETWORK
- * 
- * File ini adalah contoh. Setelah Monad mengumumkan detail resmi:
- * 1. Copy isi file ini ke chains.ts
- * 2. Ganti placeholder dengan nilai yang benar
- * 3. Update semua import dari plasmaMainnetBeta ke monadMainnet
+ * CONTOH KONFIGURASI UNTUK MEGAETH NETWORK
+ *
+ * File ini adalah contoh lama untuk Monad. Perbarui ke MegaETH:
+ * 1. Copy isi file ini ke chains.ts bila perlu.
+ * 2. Ganti placeholder dengan nilai MegaETH yang benar.
+ * 3. Update semua import ke megaEthChain.
  */
 
 import { defineChain } from 'viem';
 
-const MONAD_CHAIN_ID = 143;
-const MONAD_RPC_URL = 'https://rpc.monad.xyz';
-const MONAD_EXPLORER_URL = 'https://monadscan.com';
+const MONAD_CHAIN_ID = 4326;
+const MONAD_RPC_URL = 'https://mainnet.megaeth.com/rpc';
+const MONAD_EXPLORER_URL = 'https://megaeth.blockscout.com';
 
 export const monadMainnet = defineChain({
   id: MONAD_CHAIN_ID,
-  name: 'Monad Mainnet',
+  name: 'MegaETH Mainnet',
   nativeCurrency: { 
-    name: 'Monad', 
-    symbol: 'MON', // Ganti dari XPL ke MON
+    name: 'Ether', 
+    symbol: 'ETH',
     decimals: 18 
   },
   rpcUrls: {
@@ -27,7 +27,7 @@ export const monadMainnet = defineChain({
   },
   blockExplorers: {
     default: { 
-      name: 'Monad Explorer', 
+      name: 'MegaETH Explorer', 
       url: MONAD_EXPLORER_URL 
     },
   },
@@ -36,20 +36,20 @@ export const monadMainnet = defineChain({
 // Untuk testnet (jika diperlukan)
 export const monadTestnet = defineChain({
   id: 10143,
-  name: 'Monad Testnet',
+  name: 'MegaETH Testnet',
   nativeCurrency: { 
-    name: 'Monad', 
-    symbol: 'MON', 
+    name: 'Ether', 
+    symbol: 'ETH', 
     decimals: 18 
   },
   rpcUrls: {
-    default: { http: ['https://testnet-rpc.monad.xyz'] },
-    public: { http: ['https://testnet-rpc.monad.xyz'] },
+    default: { http: ['https://testnet-rpc.megaeth.com'] },
+    public: { http: ['https://testnet-rpc.megaeth.com'] },
   },
   blockExplorers: {
     default: { 
-      name: 'Monad Testnet Explorer', 
-      url: 'https://testnet.monadexplorer.com'
+      name: 'MegaETH Testnet Explorer', 
+      url: 'https://explorer.testnet.megaeth.com'
     },
   },
 });

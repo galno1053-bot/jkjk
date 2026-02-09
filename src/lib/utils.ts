@@ -11,7 +11,7 @@ export function formatAddress(address: string, length = 6): string {
 }
 
 export function explorerUrl(address: string, txHash?: string): string {
-  const baseUrl = process.env.NEXT_PUBLIC_EXPLORER || 'https://monadscan.com';
+  const baseUrl = process.env.NEXT_PUBLIC_EXPLORER || 'https://megaeth.blockscout.com';
   if (txHash) {
     return `${baseUrl}/tx/${txHash}`;
   }
@@ -20,10 +20,10 @@ export function explorerUrl(address: string, txHash?: string): string {
 
 // Helper: format chain config for viem/wagmi if needed elsewhere
 export const MONAD_CHAIN = {
-  id: 143,
-  name: 'Monad Chain',
-  rpcUrl: 'https://rpc.monad.xyz',
-  explorer: 'https://monadscan.com',
+  id: 4326,
+  name: 'MegaETH',
+  rpcUrl: 'https://mainnet.megaeth.com/rpc',
+  explorer: 'https://megaeth.blockscout.com',
 };
 
 export function parseCSV(csvText: string): Array<{ address: string; amount: string }> {
