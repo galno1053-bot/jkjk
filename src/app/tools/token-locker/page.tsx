@@ -265,8 +265,8 @@ export default function TokenLockerPage() {
           amountInUnits,
           BigInt(lockUntil),
         ],
-        // Use dynamic fee from contract, fallback to 50 MON
-        value: (feeAmount as bigint) ?? parseEther('50'),
+        // Use dynamic fee from contract, fallback to ~0.00235 ETH
+        value: (feeAmount as bigint) ?? parseEther('0.00235'),
       });
     } catch (error) {
       console.error('Error locking token:', error);
@@ -407,7 +407,7 @@ export default function TokenLockerPage() {
                 <div className="bg-black/40 backdrop-blur-sm border border-white/20 rounded-lg p-4">
                   <h4 className="font-medium text-white mb-2">Locking Fee</h4>
                   <p className="text-sm text-gray-300">
-                    Fee {feeAmount ? formatUnits(feeAmount as bigint, 18) : '50'} MON will be charged for each lock operation.
+                    Fee {feeAmount ? formatUnits(feeAmount as bigint, 18) : '0.00235'} ETH will be charged for each lock operation.
                   </p>
                 </div>
 
@@ -416,7 +416,7 @@ export default function TokenLockerPage() {
                   <li className="text-red-400 font-medium">⚠️ Do not lock tokens with tax / fee-on-transfer / rebasing tokens.</li>
                   <li>Ensure your token supports `approve` for the locker.</li>
                   <li>Use a future date for `Lock Until`.</li>
-                  <li>Make sure you have enough MON for the locking fee.</li>
+                  <li>Make sure you have enough ETH for the locking fee.</li>
                 </ul>
               </div>
             </div>

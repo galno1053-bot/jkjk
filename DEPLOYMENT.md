@@ -2,7 +2,7 @@
 
 ## Langkah-langkah Deployment
 
-### 1. Deploy Contract ke Monad Mainnet
+### 1. Deploy Contract ke MegaETH Mainnet
 
 #### Option A: Menggunakan Remix IDE (Recommended untuk pemula)
 
@@ -14,10 +14,10 @@
    - Klik "Compile NadzMultiSend.sol"
 5. Deploy contract:
    - Pilih tab "Deploy & Run Transactions"
-   - Environment: Pilih "Injected Provider - MetaMask" (pastikan wallet terhubung ke Monad Mainnet / Monad Chain)
+   - Environment: Pilih "Injected Provider - MetaMask" (pastikan wallet terhubung ke MegaETH Mainnet)
    - Deploy Constructor:
      - `_feeRecipient`: Masukkan alamat wallet yang akan menerima fee (contoh: `0x...`)
-     - `_feeAmount`: Masukkan jumlah fee dalam wei (contoh: `50000000000000000000` untuk 50 MON)
+     - `_feeAmount`: Masukkan jumlah fee dalam wei (contoh: `2350000000000000` untuk ~0.00235 ETH ≈ $5)
    - Klik "Deploy"
    - Copy address contract yang baru di-deploy
 
@@ -35,8 +35,8 @@ require("@nomicfoundation/hardhat-toolbox");
 module.exports = {
   solidity: "0.8.20",
   networks: {
-    "monad-mainnet": {
-      url: "https://rpc.monad.xyz",
+    "megaeth-mainnet": {
+      url: "https://mainnet.megaeth.com/rpc",
       accounts: [process.env.PRIVATE_KEY],
     },
   },
@@ -45,7 +45,7 @@ module.exports = {
 
 3. Deploy:
 ```bash
-FEE_RECIPIENT=0x... FEE_AMOUNT=50000000000000000000 npx hardhat run scripts/deploy-nadz-multisend.js --network monad-mainnet
+FEE_RECIPIENT=0x... FEE_AMOUNT=2350000000000000 npx hardhat run scripts/deploy-nadz-multisend.js --network megaeth-mainnet
 ```
 
 ### 2. Setup Environment Variable
@@ -56,7 +56,7 @@ FEE_RECIPIENT=0x... FEE_AMOUNT=50000000000000000000 npx hardhat run scripts/depl
 ```env
 NEXT_PUBLIC_MULTISEND=0x...your_contract_address_here...
 NEXT_PUBLIC_WALLET_CONNECT_PROJECT_ID=your_walletconnect_project_id
-NEXT_PUBLIC_EXPLORER=https://monadscan.com
+NEXT_PUBLIC_EXPLORER=https://megaeth.blockscout.com
 ```
 
 3. Restart development server:
@@ -66,19 +66,19 @@ npm run dev
 
 ### 3. Verifikasi Contract (Optional tapi Recommended)
 
-1. Buka [MonadScan](https://monadscan.com)
+1. Buka explorer MegaETH (contoh: https://megaeth.blockscout.com)
 2. Cari contract address yang sudah di-deploy
 3. Verifikasi contract dengan upload source code
 4. Verifikasi ABI (sudah tersedia di `src/lib/abis/multiSend.json`)
 
 ### 4. Testing Multi-Send
 
-1. Pastikan wallet terhubung ke Monad Mainnet (Chain ID 143)
-2. Pastikan wallet memiliki cukup MON untuk:
-   - Fee multi-send (50 MON default)
+1. Pastikan wallet terhubung ke MegaETH Mainnet (Chain ID 4326)
+2. Pastikan wallet memiliki cukup ETH untuk:
+   - Fee multi-send (~0.00235 ETH default)
    - Jumlah yang akan di-send ke recipients
-3. Test dengan native token (MON):
-   - Pilih "Native Token (MON)"
+3. Test dengan native token (ETH):
+   - Pilih "Native Token (ETH)"
    - Tambahkan beberapa recipient
    - Isi jumlah yang akan di-send
    - Klik "Send"
@@ -91,12 +91,12 @@ npm run dev
 
 ## Konfigurasi Fee
 
-Default fee: 50 MON (50000000000000000000 wei)
+Default fee: ~0.00235 ETH (2350000000000000 wei)
 
 Untuk mengubah fee setelah deployment (hanya owner):
 ```javascript
 // Di Remix atau ethers.js
-await contract.setFeeAmount("100000000000000000000"); // 100 MON
+await contract.setFeeAmount("4700000000000000"); // contoh: ~0.0047 ETH (~$10)
 ```
 
 ## Troubleshooting
@@ -106,7 +106,7 @@ await contract.setFeeAmount("100000000000000000000"); // 100 MON
 - Restart development server setelah menambah environment variable
 
 ### Error: "Insufficient value"
-- Pastikan wallet memiliki cukup MON untuk fee + total amount yang akan di-send
+- Pastikan wallet memiliki cukup ETH untuk fee + total amount yang akan di-send
 
 ### Error: "Transfer from failed" (untuk ERC20)
 - Pastikan sudah approve token sebelum multi-send

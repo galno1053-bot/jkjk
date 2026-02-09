@@ -338,15 +338,15 @@ export default function MultiSendPage() {
       const addresses = data.recipients.map(r => r.address as `0x${string}`);
       
       if (data.tokenType === 'native') {
-        // Native token (MON) sending using multi-send contract
+        // Native token (ETH) sending using multi-send contract
         const amounts = data.recipients.map(r => convertToBigInt(r.amount, 18));
         const totalAmount = amounts.reduce((sum, amount) => sum + amount, BigInt(0));
-        const fee = (feeAmount as bigint) ?? parseEther('50');
+        const fee = (feeAmount as bigint) ?? parseEther('0.00235');
 
         addToast({
           type: 'info',
           title: 'Starting Multi-Send',
-          description: `Sending MON to ${addresses.length} recipients...`,
+          description: `Sending ETH to ${addresses.length} recipients...`,
         });
 
         try {
@@ -404,7 +404,7 @@ export default function MultiSendPage() {
         }
 
         const amounts = data.recipients.map(r => convertToBigInt(r.amount, decimals));
-        const fee = (feeAmount as bigint) ?? parseEther('50');
+        const fee = (feeAmount as bigint) ?? parseEther('0.00235');
 
         addToast({
           type: 'info',
@@ -497,7 +497,7 @@ export default function MultiSendPage() {
                           {...register('tokenType')}
                           className="w-full h-12 px-4 rounded-md bg-gray-100 text-black border-2 border-gray-300 hover:border-gray-400 focus:outline-none focus:ring-2 focus:ring-gray-300 focus:border-gray-500 transition-colors"
                         >
-                          <option value="native">Native Token (MON)</option>
+                  <option value="native">Native Token (ETH)</option>
                           <option value="prc20">Token</option>
                         </select>
                       </div>
@@ -643,14 +643,14 @@ export default function MultiSendPage() {
                 <div className="bg-black/40 backdrop-blur-sm border border-white/20 rounded-lg p-4">
                   <h4 className="font-medium text-white mb-2">Multi-Send Fee</h4>
                   <p className="text-sm text-gray-300">
-                    Fee {feeAmount ? formatUnits(feeAmount as bigint, 18) : '50'} MON will be charged for each multi-send operation.
+                    Fee {feeAmount ? formatUnits(feeAmount as bigint, 18) : '0.00235'} ETH will be charged for each multi-send operation.
                   </p>
                 </div>
 
                 <div className="bg-black/40 backdrop-blur-sm border border-white/20 rounded-lg p-4">
                   <p className="text-sm text-gray-300">Token Type</p>
                   <p className="text-lg font-bold text-white">
-                    {watch('tokenType') === 'native' ? 'Native (MON)' : 'Token'}
+                    {watch('tokenType') === 'native' ? 'Native (ETH)' : 'Token'}
                   </p>
                   <p className="text-sm text-gray-300 mt-4">Recipients</p>
                   <p className="text-2xl font-bold text-white">{recipients.length}</p>
@@ -658,9 +658,9 @@ export default function MultiSendPage() {
                   <p className="text-2xl font-bold text-white">{totalAmount.toLocaleString()} tokens</p>
                   {watch('tokenType') === 'native' && (
                     <>
-                      <p className="text-sm text-gray-300 mt-4">Total MON Required</p>
+                      <p className="text-sm text-gray-300 mt-4">Total ETH Required</p>
                       <p className="text-lg font-bold text-white">
-                        {(totalAmount + (feeAmount ? Number(formatUnits(feeAmount as bigint, 18)) : 50)).toLocaleString()} MON
+                        {(totalAmount + (feeAmount ? Number(formatUnits(feeAmount as bigint, 18)) : 0.00235)).toLocaleString()} ETH
                       </p>
                     </>
                   )}
@@ -682,7 +682,7 @@ export default function MultiSendPage() {
                   Import supports CSV and JSON. Ensure amounts are in token units.
                   <br />
                   <br />
-                  <strong>Note:</strong> Make sure you have enough MON for the multi-send fee.
+                  <strong>Note:</strong> Make sure you have enough ETH for the multi-send fee.
                 </div>
               </div>
             </div>
