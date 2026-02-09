@@ -9,7 +9,7 @@ export default function NotFound() {
         <p className="text-xl md:text-2xl text-gray-300 mb-8">This page could not be found.</p>
         <Link
           href="/"
-          className="inline-block px-6 py-3 bg-[#8500FF] hover:bg-[#9500FF] text-white font-semibold rounded-md transition-colors"
+          className="inline-block px-6 py-3 bg-white text-black hover:bg-black hover:text-white border-2 border-black font-semibold rounded-md transition-colors"
         >
           Back to Home
         </Link>
@@ -17,4 +17,16 @@ export default function NotFound() {
     </div>
   );
 }
+
+
+
+
+
+
+
+
+
+
+
+
 

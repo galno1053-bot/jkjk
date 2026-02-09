@@ -219,7 +219,7 @@ export default function MyLiquidityLockPage() {
               <div className="fixed top-16 left-0 right-0 lg:left-64 bottom-0 z-40 pointer-events-auto cursor-not-allowed select-none">
                 <div className="absolute inset-0 backdrop-blur-md bg-black/70" />
                 <div className="absolute inset-x-0 top-1/2 -translate-y-1/2 mx-auto max-w-2xl z-20 text-center px-6">
-                  <div className="rounded-lg border-2 border-[#8500FF] bg-[#1a0a2e] backdrop-blur-sm p-4 shadow-sm">
+                  <div className="rounded-lg border-2 border-white bg-[#0f0f0f] backdrop-blur-sm p-4 shadow-sm">
                     <p className="font-semibold mb-1 text-white">Coming Soon</p>
                     <p className="text-sm text-gray-300">
                       Liquidity Locker is not available yet. For now, you can use Token Locker to lock your LP tokens.
@@ -239,11 +239,11 @@ export default function MyLiquidityLockPage() {
               <>
                 {/* Summary */}
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
-                  <div className="rounded-lg border border-[#8500FF]/30 p-4 bg-black/40 backdrop-blur-sm">
+                  <div className="rounded-lg border border-white/20 p-4 bg-black/40 backdrop-blur-sm">
                     <p className="text-xs text-gray-400">Total Locks</p>
                     <p className="text-2xl font-semibold text-white">{totalLocksCount}</p>
                   </div>
-                  <div className="rounded-lg border border-[#8500FF]/30 p-4 bg-black/40 backdrop-blur-sm">
+                  <div className="rounded-lg border border-white/20 p-4 bg-black/40 backdrop-blur-sm">
                     <p className="text-xs text-gray-400">Total Unlock</p>
                     <p className="text-2xl font-semibold text-white">{totalUnlockCount}</p>
                   </div>
@@ -260,7 +260,7 @@ export default function MyLiquidityLockPage() {
                   </thead>
                   <tbody>
                     {rows.map((row, idx) => (
-                      <tr key={row?.lockId ? String(row.lockId) : `row-${idx}`} className="border-t border-[#8500FF]/30 hover:bg-black/20">
+                      <tr key={row?.lockId ? String(row.lockId) : `row-${idx}`} className="border-t border-white/20 hover:bg-black/20">
                         <td className="py-3 pr-4 font-mono break-all">
                           {row?.lpToken || '-'}
                           <button
@@ -291,12 +291,24 @@ export default function MyLiquidityLockPage() {
           </div>
 
           {txHash && (
-            <div className="mt-6 p-4 bg-[#f0ebf5] border border-[#8500FF] rounded-lg">
-              <a href={explorerUrl('', txHash)} target="_blank" rel="noopener noreferrer" className="text-[#8500FF] underline">View transaction on explorer</a>
+            <div className="mt-6 p-4 bg-[#0f0f0f] border border-white rounded-lg">
+              <a href={explorerUrl('', txHash)} target="_blank" rel="noopener noreferrer" className="text-white underline">View transaction on explorer</a>
             </div>
           )}
         </div>
     </RequireWallet>
   );
 }
+
+
+
+
+
+
+
+
+
+
+
+
 

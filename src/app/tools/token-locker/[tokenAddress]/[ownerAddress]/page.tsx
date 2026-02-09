@@ -26,11 +26,11 @@ const statusLabel = (lockUntil: bigint, remaining: bigint) => {
 const statusColor = (label: string) => {
   switch (label) {
     case 'Unlocked':
-      return 'bg-green-500/10 text-green-300 border border-green-500/40';
+      return 'bg-white/10 text-gray-200 border border-white/25';
     case 'Withdrawn':
       return 'bg-gray-500/10 text-gray-300 border border-gray-500/40';
     default:
-      return 'bg-yellow-500/10 text-yellow-300 border border-yellow-500/40';
+      return 'bg-white/10 text-gray-300 border border-white/25';
   }
 };
 
@@ -86,7 +86,7 @@ export default function TokenLockProofPage({ params }: PageProps) {
     <div className="min-h-screen py-8">
       <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 space-y-6">
         <div className="space-y-2">
-          <Link href="/token-locker/token-lock" className="text-sm text-[#8500FF] hover:underline">
+          <Link href="/token-locker/token-lock" className="text-sm text-white hover:underline">
             ← Back to Token Locker
           </Link>
           <h1 className="text-3xl font-bold text-white">Token Lock Proof</h1>
@@ -101,7 +101,7 @@ export default function TokenLockProofPage({ params }: PageProps) {
                   href={explorerUrl(normalizedToken)}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="text-[#8500FF] hover:underline ml-1"
+                  className="text-white hover:underline ml-1"
                 >
                   (View on explorer)
                 </a>
@@ -112,7 +112,7 @@ export default function TokenLockProofPage({ params }: PageProps) {
                   href={explorerUrl(normalizedOwner)}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="text-[#8500FF] hover:underline ml-1"
+                  className="text-white hover:underline ml-1"
                 >
                   (View on explorer)
                 </a>
@@ -128,7 +128,7 @@ export default function TokenLockProofPage({ params }: PageProps) {
               <input
                 readOnly
                 value={shareUrl || 'Invalid token or owner address'}
-                className="flex-1 bg-black/40 border border-[#8500FF]/40 rounded-md px-4 py-3 text-white font-mono text-sm"
+                className="flex-1 bg-black/40 border border-white/40 rounded-md px-4 py-3 text-white font-mono text-sm"
               />
               <button
                 type="button"
@@ -161,19 +161,19 @@ export default function TokenLockProofPage({ params }: PageProps) {
         {isValidToken && isValidOwner && (
           <div className="card p-6 space-y-6">
             <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
-              <div className="rounded-lg border border-[#8500FF]/30 p-4 bg-black/40">
+              <div className="rounded-lg border border-white/20 p-4 bg-black/40">
                 <p className="text-xs text-gray-400 uppercase tracking-wide">Total Locked</p>
                 <p className="text-2xl font-semibold text-white mt-1">
                   {formatAmount(totals.locked)} {symbol || ''}
                 </p>
               </div>
-              <div className="rounded-lg border border-[#8500FF]/30 p-4 bg-black/40">
+              <div className="rounded-lg border border-white/20 p-4 bg-black/40">
                 <p className="text-xs text-gray-400 uppercase tracking-wide">Remaining Locked</p>
                 <p className="text-2xl font-semibold text-white mt-1">
                   {formatAmount(totals.remaining)} {symbol || ''}
                 </p>
               </div>
-              <div className="rounded-lg border border-[#8500FF]/30 p-4 bg-black/40">
+              <div className="rounded-lg border border-white/20 p-4 bg-black/40">
                 <p className="text-xs text-gray-400 uppercase tracking-wide">Already Withdrawn</p>
                 <p className="text-2xl font-semibold text-white mt-1">
                   {formatAmount(totals.withdrawn)} {symbol || ''}
@@ -206,7 +206,7 @@ export default function TokenLockProofPage({ params }: PageProps) {
                       const remaining = lock.amount - lock.withdrawn;
                       const label = statusLabel(lock.lockUntil, remaining);
                       return (
-                        <tr key={String(lock.lockId)} className="border-t border-[#8500FF]/20">
+                        <tr key={String(lock.lockId)} className="border-t border-white/20">
                           <td className="py-3 pr-4">
                             <div className="flex items-center gap-2">
                               <span className="font-mono">{formatAddress(lock.owner)}</span>
@@ -252,4 +252,15 @@ export default function TokenLockProofPage({ params }: PageProps) {
     </div>
   );
 }
+
+
+
+
+
+
+
+
+
+
+
 

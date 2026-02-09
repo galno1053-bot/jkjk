@@ -76,8 +76,8 @@ export function FileDrop({
         className={cn(
           'border-2 border-dashed rounded-lg p-6 text-center transition-colors',
           isDragOver
-            ? 'border-[#8500FF] bg-[#f0ebf5]'
-            : 'border-gray-300 hover:border-gray-400',
+            ? 'border-white bg-[#0f0f0f]'
+            : 'border-white/30 hover:border-white/60',
           error && 'border-red-300 bg-red-50'
         )}
         onDrop={handleDrop}
@@ -95,7 +95,7 @@ export function FileDrop({
           <div className="flex flex-col items-center space-y-2">
             <Upload className="h-8 w-8 text-gray-400" />
             <div className="text-sm text-gray-600">
-              <span className="font-medium text-[#8500FF]">Click to upload</span> or drag and drop
+              <span className="font-medium text-white">Click to upload</span> or drag and drop
             </div>
             <div className="text-xs text-gray-500">
               {acceptedTypes.join(', ')} (max {maxSize}MB)
@@ -113,3 +113,15 @@ export function FileDrop({
     </div>
   );
 }
+
+
+
+
+
+
+
+
+
+
+
+

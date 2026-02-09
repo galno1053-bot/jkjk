@@ -469,7 +469,7 @@ export default function MultiSendPage() {
               <div className="fixed top-16 left-0 right-0 lg:left-64 bottom-0 z-40 pointer-events-auto cursor-not-allowed select-none">
                 <div className="absolute inset-0 backdrop-blur-md bg-black/70" />
                 <div className="absolute inset-x-0 top-1/2 -translate-y-1/2 mx-auto max-w-2xl z-20 text-center px-6">
-                  <div className="rounded-lg border-2 border-[#8500FF] bg-[#1a0a2e] backdrop-blur-sm p-4 shadow-sm">
+                  <div className="rounded-lg border-2 border-white bg-[#0f0f0f] backdrop-blur-sm p-4 shadow-sm">
                     <p className="font-semibold mb-1 text-white">Coming Soon</p>
                     <p className="text-sm text-gray-300">
                       Multi-Send is not available yet. Please check back later.
@@ -510,8 +510,8 @@ export default function MultiSendPage() {
                             {...register('tokenAddress')}
                           />
                           {needsApproval && (
-                            <div className="mt-4 p-4 bg-yellow-900/30 border border-yellow-600 rounded-lg">
-                              <p className="text-sm text-yellow-200 mb-2">
+                            <div className="mt-4 p-4 bg-black/40 border border-white/30 rounded-lg">
+                              <p className="text-sm text-gray-200 mb-2">
                                 Approval required before multi-send.
                               </p>
                               <button
@@ -525,8 +525,8 @@ export default function MultiSendPage() {
                             </div>
                           )}
                           {!needsApproval && tokenAddress && (
-                            <div className="mt-4 p-4 bg-green-900/30 border border-green-600 rounded-lg">
-                              <p className="text-sm text-green-200">
+                            <div className="mt-4 p-4 bg-black/40 border border-white/30 rounded-lg">
+                              <p className="text-sm text-gray-200">
                                 ✓ Token approved and ready for multi-send
                               </p>
                             </div>
@@ -640,14 +640,14 @@ export default function MultiSendPage() {
                 <h3 className="text-lg font-semibold text-white">Summary</h3>
                 
                 {/* Fee Information */}
-                <div className="bg-black/40 backdrop-blur-sm border border-[#8500FF]/30 rounded-lg p-4">
+                <div className="bg-black/40 backdrop-blur-sm border border-white/20 rounded-lg p-4">
                   <h4 className="font-medium text-white mb-2">Multi-Send Fee</h4>
                   <p className="text-sm text-gray-300">
                     Fee {feeAmount ? formatUnits(feeAmount as bigint, 18) : '50'} MON will be charged for each multi-send operation.
                   </p>
                 </div>
 
-                <div className="bg-black/40 backdrop-blur-sm border border-[#8500FF]/30 rounded-lg p-4">
+                <div className="bg-black/40 backdrop-blur-sm border border-white/20 rounded-lg p-4">
                   <p className="text-sm text-gray-300">Token Type</p>
                   <p className="text-lg font-bold text-white">
                     {watch('tokenType') === 'native' ? 'Native (MON)' : 'Token'}
@@ -667,13 +667,13 @@ export default function MultiSendPage() {
                 </div>
                 <div className={`border rounded-lg p-4 ${
                   process.env.NEXT_PUBLIC_MULTISEND 
-                    ? 'bg-[#f0ebf5] border-[#8500FF]' 
-                    : 'bg-black/40 backdrop-blur-sm border border-[#8500FF]/30'
+                    ? 'bg-[#0f0f0f] border-white' 
+                    : 'bg-black/40 backdrop-blur-sm border border-white/20'
                 }`}>
                   <p className={`text-sm ${
                     process.env.NEXT_PUBLIC_MULTISEND 
-                      ? 'text-[#8500FF]' 
-                      : 'text-blue-300'
+                      ? 'text-white' 
+                      : 'text-gray-300'
                   }`}>
                     You can send tokens to multiple recipients in a single transaction.
                   </p>
@@ -694,3 +694,16 @@ export default function MultiSendPage() {
     </RequireWallet>
   );
 }
+
+
+
+
+
+
+
+
+
+
+
+
+

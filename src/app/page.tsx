@@ -7,35 +7,35 @@ const tools = [
     description: 'Create custom tokens on Monad Mainnet',
     href: '/tools/create-token',
     icon: Coins,
-    color: 'bg-[#8500FF]',
+    color: 'bg-white text-black',
   },
   {
     name: 'Token Locker',
     description: 'Lock your tokens with custom vesting schedules',
     href: '/tools/token-locker',
     icon: Lock,
-    color: 'bg-[#8500FF]',
+    color: 'bg-white text-black',
   },
   {
     name: 'Liquidity Locker',
     description: 'Secure your LP tokens with time-based locks',
     href: '/tools/liquidity-locker',
     icon: Shield,
-    color: 'bg-[#8500FF]',
+    color: 'bg-white text-black',
   },
   {
     name: 'Token Vesting',
     description: 'Create and manage token vesting schedules',
     href: '/tools/vesting',
     icon: Calendar,
-    color: 'bg-[#8500FF]',
+    color: 'bg-white text-black',
   },
   {
     name: 'Multi-Send',
     description: 'Send tokens to multiple addresses efficiently',
     href: '/tools/multi-send',
     icon: Send,
-    color: 'bg-[#8500FF]',
+    color: 'bg-white text-black',
   },
 ];
 
@@ -83,15 +83,15 @@ export default function HomePage() {
                 className="group card p-6 hover:shadow-lg transition-all duration-200 hover:-translate-y-1"
               >
                 <div className={`w-12 h-12 ${tool.color} rounded-lg flex items-center justify-center mb-4 group-hover:scale-110 transition-transform`}>
-                  <tool.icon className="h-6 w-6 text-white" />
+                  <tool.icon className="h-6 w-6 text-black" />
                 </div>
-                <h3 className="text-xl font-semibold text-white mb-2 group-hover:text-[#8500FF] transition-colors">
+                <h3 className="text-xl font-semibold text-white mb-2 group-hover:text-white transition-colors">
                   {tool.name}
                 </h3>
                 <p className="text-gray-300 group-hover:text-gray-200 transition-colors">
                   {tool.description}
                 </p>
-                <div className="mt-4 flex items-center text-blue-600 font-medium group-hover:text-blue-800 group-hover:translate-x-1 transition-all">
+                <div className="mt-4 flex items-center text-gray-200 font-medium group-hover:text-white group-hover:translate-x-1 transition-all">
                   Use Tool
                   <ArrowRight className="ml-1 h-4 w-4" />
                 </div>
@@ -104,3 +104,15 @@ export default function HomePage() {
     </div>
   );
 }
+
+
+
+
+
+
+
+
+
+
+
+

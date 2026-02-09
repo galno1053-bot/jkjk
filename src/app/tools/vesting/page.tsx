@@ -396,7 +396,7 @@ export default function VestingPage() {
               <div className="fixed top-16 left-0 right-0 lg:left-64 bottom-0 z-40 pointer-events-auto cursor-not-allowed select-none">
                 <div className="absolute inset-0 backdrop-blur-md bg-black/70" />
                 <div className="absolute inset-x-0 top-1/2 -translate-y-1/2 mx-auto max-w-2xl z-20 text-center px-6">
-                  <div className="rounded-lg border-2 border-[#8500FF] bg-[#1a0a2e] backdrop-blur-sm p-4 shadow-sm">
+                  <div className="rounded-lg border border-white/20 bg-[#0f0f0f] backdrop-blur-sm p-4 shadow-sm">
                     <p className="font-semibold text-white">Coming Soon</p>
                   </div>
                 </div>
@@ -580,14 +580,14 @@ export default function VestingPage() {
                 </form>
 
                 {createdScheduleId && (
-                  <div className="mt-8 p-4 bg-blue-50 border border-blue-200 rounded-lg">
-                    <h3 className="text-lg font-semibold text-blue-800 mb-2">Vesting Schedule Created!</h3>
-                    <p className="text-blue-300 mb-4">
+                  <div className="mt-8 p-4 bg-[#f5f5f5] border border-white/40 rounded-lg">
+                    <h3 className="text-lg font-semibold text-gray-200 mb-2">Vesting Schedule Created!</h3>
+                    <p className="text-gray-300 mb-4">
                       Schedule ID: {createdScheduleId}
                     </p>
                     {claimable && typeof claimable === 'bigint' && claimable > BigInt(0) ? (
                       <div className="mb-4">
-                        <p className="text-blue-700 mb-2">
+                        <p className="text-gray-200 mb-2">
                           Claimable Amount: {claimableAmount.toString()}
                         </p>
                         <button
@@ -602,7 +602,7 @@ export default function VestingPage() {
                       href={explorerUrl('', hash)}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="inline-flex items-center text-blue-600 hover:text-blue-800 font-medium"
+                      className="inline-flex items-center text-gray-200 hover:text-gray-200 font-medium"
                     >
                       View Transaction on Explorer
                       <svg className="ml-1 h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -656,3 +656,15 @@ export default function VestingPage() {
     </RequireWallet>
   );
 }
+
+
+
+
+
+
+
+
+
+
+
+

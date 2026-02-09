@@ -44,9 +44,9 @@ export function Toast({ id, type, title, description, duration = 5000, onClose }
   };
 
   const colors = {
-    success: 'bg-black/60 backdrop-blur-sm border-[#8500FF] text-[#8500FF]',
+    success: 'bg-black/70 backdrop-blur-sm border-white text-white',
     error: 'bg-red-50 border-red-200 text-red-800',
-    info: 'bg-blue-50 border-blue-200 text-blue-800',
+    info: 'bg-[#111111] backdrop-blur-sm border-white/60 text-white',
   };
 
   const Icon = icons[type];
@@ -54,7 +54,7 @@ export function Toast({ id, type, title, description, duration = 5000, onClose }
   return (
     <div
       className={cn(
-        'relative w-full bg-black/60 backdrop-blur-sm border border-[#8500FF]/30 rounded-lg shadow-lg transform transition-all duration-300',
+        'relative w-full bg-black/60 backdrop-blur-sm border border-white/20 rounded-lg shadow-lg transform transition-all duration-300',
         isVisible ? 'translate-x-0 opacity-100' : 'translate-x-full opacity-0',
         colors[type]
       )}
@@ -72,7 +72,7 @@ export function Toast({ id, type, title, description, duration = 5000, onClose }
           </div>
           <div className="ml-4 flex-shrink-0 flex">
             <button
-              className="rounded-md inline-flex text-gray-400 hover:text-gray-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 p-1 hover:bg-gray-100 transition-colors"
+              className="rounded-md inline-flex text-gray-400 hover:text-gray-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-white p-1 hover:bg-white/10 transition-colors"
               onClick={handleClose}
               type="button"
             >
@@ -94,3 +94,15 @@ export function ToastContainer({ toasts, onClose }: { toasts: ToastProps[]; onCl
     </div>
   );
 }
+
+
+
+
+
+
+
+
+
+
+
+

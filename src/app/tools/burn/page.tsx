@@ -243,7 +243,7 @@ export default function BurnPage() {
                       {...register('tokenAddress')}
                     />
                     {tokenAddress && isValidAddress(tokenAddress) && balance !== undefined && (
-                      <div className="mt-4 p-4 bg-black/40 backdrop-blur-sm border border-[#8500FF]/30 rounded-lg">
+                      <div className="mt-4 p-4 bg-black/40 backdrop-blur-sm border border-white/20 rounded-lg">
                         <p className="text-sm text-gray-300">Your Balance</p>
                         <p className="text-lg font-bold text-white break-all break-words overflow-wrap-anywhere">{balanceFormatted} tokens</p>
                       </div>
@@ -265,7 +265,7 @@ export default function BurnPage() {
                           onClick={() => {
                             setValue('amount', balanceFormatted);
                           }}
-                          className="text-sm text-[#8500FF] hover:text-[#a020f0] underline"
+                          className="text-sm text-white hover:text-gray-200 underline"
                         >
                           Use Max Balance
                         </button>
@@ -306,7 +306,7 @@ export default function BurnPage() {
               <div className="card p-6 lg:sticky lg:top-24 space-y-4">
                 <h3 className="text-lg font-semibold text-white">Summary</h3>
                 
-                <div className="bg-black/40 backdrop-blur-sm border border-[#8500FF]/30 rounded-lg p-4 overflow-hidden">
+                <div className="bg-black/40 backdrop-blur-sm border border-white/20 rounded-lg p-4 overflow-hidden">
                   <p className="text-sm text-gray-300">Token Address</p>
                   <p className="text-xs font-mono text-white break-all mt-1">
                     {tokenAddress || 'Not specified'}
@@ -331,7 +331,7 @@ export default function BurnPage() {
                   )}
                 </div>
 
-                <div className="bg-black/40 backdrop-blur-sm border border-[#8500FF]/30 rounded-lg p-4">
+                <div className="bg-black/40 backdrop-blur-sm border border-white/20 rounded-lg p-4">
                   <p className="text-sm text-gray-300 mb-2">How it works:</p>
                   <ul className="text-xs text-gray-400 space-y-1 list-disc list-inside">
                     <li>Tokens are sent to a dead address (0x...dEaD)</li>
@@ -350,4 +350,17 @@ export default function BurnPage() {
     </RequireWallet>
   );
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
 

@@ -171,7 +171,7 @@ export default function CreateTokenPage() {
               <div className="fixed top-16 left-0 right-0 lg:left-64 bottom-0 z-40 pointer-events-auto cursor-not-allowed select-none">
                 <div className="absolute inset-0 backdrop-blur-md bg-black/70" />
                 <div className="absolute inset-x-0 top-1/2 -translate-y-1/2 mx-auto max-w-2xl z-20 text-center px-6">
-                  <div className="rounded-lg border-2 border-[#8500FF] bg-[#1a0a2e] backdrop-blur-sm p-4 shadow-sm">
+                  <div className="rounded-lg border border-white/20 bg-[#0f0f0f] backdrop-blur-sm p-4 shadow-sm">
                     <p className="font-semibold mb-1 text-white">Coming Soon</p>
                     <p className="text-sm text-gray-300">
                       Token Creation is not available yet. Please check back later.
@@ -251,16 +251,16 @@ export default function CreateTokenPage() {
                 </form>
 
                 {isSuccess && hash && (
-                  <div className="mt-8 p-4 bg-[#f0ebf5] border border-[#8500FF] rounded-lg">
-                    <h3 className="text-lg font-semibold text-[#8500FF] mb-2">Token Created Successfully!</h3>
-                    <p className="text-[#8500FF] mb-4">
+                  <div className="mt-8 p-4 bg-[#0f0f0f] border border-white/30 rounded-lg">
+                    <h3 className="text-lg font-semibold text-white mb-2">Token Created Successfully!</h3>
+                    <p className="text-gray-200 mb-4">
                       Your token has been deployed to the blockchain.
                     </p>
                     <a
                       href={explorerUrl('', hash)}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="inline-flex items-center text-[#8500FF] hover:text-[#7000D9] font-medium"
+                      className="inline-flex items-center text-white hover:text-gray-200 font-medium"
                     >
                       View Transaction on Explorer
                       <svg className="ml-1 h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -276,7 +276,7 @@ export default function CreateTokenPage() {
             <div className={`lg:col-span-4 ${isComingSoon ? 'blur-sm select-none pointer-events-none user-select-none' : ''}`}>
               <div className="card p-6 lg:sticky lg:top-24 space-y-6">
                 {/* Fee Information */}
-                <div className="bg-[#1a0a2e] backdrop-blur-sm border-2 border-[#8500FF] rounded-lg p-4">
+                <div className="bg-[#0f0f0f] backdrop-blur-sm border border-[#2a2a2a] rounded-lg p-4">
                   <h4 className="font-medium text-white mb-2">Token Creation Fee</h4>
                   <p className="text-sm text-gray-300">
                     Fee {feeAmount ? formatUnits(feeAmount as bigint, 18) : '50'} MON will be charged for token creation.
@@ -285,7 +285,7 @@ export default function CreateTokenPage() {
 
                 <div>
                   <h3 className="text-lg font-semibold text-white mb-2">Preview</h3>
-                  <div className="bg-[#1a0a2e] backdrop-blur-sm border-2 border-[#8500FF] rounded-lg p-4 space-y-2">
+                  <div className="bg-[#0f0f0f] backdrop-blur-sm border border-[#2a2a2a] rounded-lg p-4 space-y-2">
                     <p className="text-sm text-gray-300">Name</p>
                     <p className="font-semibold text-white">{watch('name') || '—'}</p>
                     <p className="text-sm text-gray-300 mt-3">Symbol</p>
@@ -317,3 +317,15 @@ export default function CreateTokenPage() {
     </RequireWallet>
   );
 }
+
+
+
+
+
+
+
+
+
+
+
+

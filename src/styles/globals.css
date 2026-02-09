@@ -3,20 +3,20 @@
 @tailwind utilities;
 
 :root {
-  --primary: #8500FF;
-  --primary-foreground: #ffffff;
+  --primary: #ffffff;
+  --primary-foreground: #000000;
   --background: #000000;
   --foreground: #ededed;
-  --muted: #1a1a1a;
-  --muted-foreground: #9ca3af;
-  --border: #8500FF;
-  --input: #1a1a1a;
-  --ring: #8500FF;
+  --muted: #0f0f0f;
+  --muted-foreground: #b0b0b0;
+  --border: #ffffff;
+  --input: #111111;
+  --ring: #ffffff;
 }
 
 body {
   color: hsl(var(--foreground));
-  background: #000000;
+  background: radial-gradient(circle at 30% 40%, #f5f5f5 0%, #0d0d0d 45%, #000 70%);
   background-attachment: fixed;
   min-height: 100vh;
   font-feature-settings: "rlig" 1, "calt" 1;
@@ -31,34 +31,32 @@ body {
 
 @layer components {
   .btn-primary {
-    background: linear-gradient(135deg, #7000D9 0%, #8500FF 100%);
-    @apply text-white font-bold px-5 py-3 rounded-lg transition-all shadow-lg border-2 border-transparent text-lg;
+    @apply bg-white text-black font-bold px-5 py-3 rounded-lg transition-all shadow-lg border-2 border-black text-lg;
   }
   
   .btn-primary:hover {
-    background: linear-gradient(135deg, #8500FF 0%, #7000D9 100%);
+    @apply bg-black text-white border-white;
     transform: translateY(-1px);
-    box-shadow: 0 10px 25px rgba(133, 0, 255, 0.4);
+    box-shadow: 0 10px 25px rgba(255, 255, 255, 0.15);
   }
   
   .btn-primary:disabled {
-    background: linear-gradient(135deg, #4a0077 0%, #6600a0 100%);
-    @apply text-white cursor-not-allowed shadow-md opacity-60;
+    @apply bg-[#1a1a1a] text-gray-500 cursor-not-allowed shadow-md opacity-60 border border-gray-600;
   }
   
   .btn-secondary {
-    @apply bg-gray-300 hover:bg-gray-400 text-gray-900 font-bold px-5 py-3 rounded-lg border-2 border-gray-600 transition-colors shadow-lg text-lg;
+    @apply bg-transparent text-white font-bold px-5 py-3 rounded-lg border-2 border-white transition-colors shadow-lg text-lg;
   }
   
   .btn-secondary:disabled {
-    @apply bg-gray-300 text-gray-500 cursor-not-allowed shadow-none border-gray-300;
+    @apply text-gray-500 cursor-not-allowed shadow-none border-gray-700;
   }
   
   .card {
-    @apply bg-[#1a0a2e] backdrop-blur-sm border-2 border-[#8500FF] rounded-lg shadow-lg;
+    @apply bg-[#0f0f0f] backdrop-blur-sm border border-[#2a2a2a] rounded-lg shadow-lg;
   }
   
   .input {
-    @apply w-full h-12 px-4 rounded-md bg-black/30 backdrop-blur-sm text-white border-2 border-[#8500FF]/50 focus:border-[#8500FF] focus:outline-none focus:ring-2 focus:ring-[#8500FF] transition-colors hover:border-[#8500FF];
+    @apply w-full h-12 px-4 rounded-md bg-[#111111]/80 backdrop-blur-sm text-white border-2 border-white/30 focus:border-white focus:outline-none focus:ring-2 focus:ring-white/60 transition-colors hover:border-white/70;
   }
 }

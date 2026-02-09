@@ -92,7 +92,7 @@ export function Sidebar() {
     <>
       {/* Mobile menu button */}
       <button
-        className="lg:hidden fixed top-4 right-4 z-50 p-2 rounded-md bg-black/60 backdrop-blur-md border border-[#8500FF]/30 shadow-sm"
+        className="lg:hidden fixed top-4 right-4 z-50 p-2 rounded-md bg-black/60 backdrop-blur-md border border-white/20 shadow-sm"
         onClick={() => setIsOpen(!isOpen)}
       >
         {isOpen ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
@@ -100,7 +100,7 @@ export function Sidebar() {
 
       {/* Sidebar */}
       <div className={cn(
-        "fixed top-16 left-0 z-[9999] pointer-events-auto w-64 h-[calc(100vh-4rem)] bg-black/80 backdrop-blur-md border-r border-[#8500FF]/20 transform transition-transform duration-200 ease-in-out lg:translate-x-0 lg:static lg:inset-0 lg:fixed lg:top-16",
+        "fixed top-16 left-0 z-[9999] pointer-events-auto w-64 h-[calc(100vh-4rem)] bg-black/80 backdrop-blur-md border-r border-white/15 transform transition-transform duration-200 ease-in-out lg:translate-x-0 lg:static lg:inset-0 lg:fixed lg:top-16",
         isOpen ? "translate-x-0" : "-translate-x-full"
       )}>
         <div className="flex flex-col h-full">
@@ -118,7 +118,7 @@ export function Sidebar() {
                         type="button"
                         className={cn(
                           'w-full flex items-center px-2 py-2 text-sm font-medium rounded-md transition-colors',
-                          isSectionActive ? 'bg-[#8500FF] text-white' : 'text-gray-300 hover:bg-black/40 hover:text-white'
+                          isSectionActive ? 'bg-white text-black' : 'text-gray-300 hover:bg-white/10 hover:text-white'
                         )}
                         onClick={(e) => {
                           e.preventDefault();
@@ -129,7 +129,7 @@ export function Sidebar() {
                         <item.icon
                           className={cn(
                             'mr-3 h-5 w-5 flex-shrink-0',
-                            isSectionActive ? 'text-white' : 'text-gray-400'
+                            isSectionActive ? 'text-black' : 'text-gray-400'
                           )}
                         />
                         <span className="flex-1 text-left">{item.name}</span>
@@ -137,7 +137,7 @@ export function Sidebar() {
                           className={cn(
                             'h-4 w-4 transition-transform',
                             isSectionOpen ? 'rotate-180' : 'rotate-0',
-                            isSectionActive ? 'text-white' : 'text-gray-400'
+                            isSectionActive ? 'text-black' : 'text-gray-400'
                           )}
                         />
                       </button>
@@ -148,7 +148,7 @@ export function Sidebar() {
                             const isExternal = child.href.startsWith('http');
                             const className = cn(
                               'group flex items-center px-2 py-2 text-sm font-medium rounded-md transition-colors',
-                              isActive ? 'bg-[#8500FF] text-white' : 'text-gray-300 hover:bg-black/40 hover:text-white'
+                              isActive ? 'bg-white text-black' : 'text-gray-300 hover:bg-white/10 hover:text-white'
                             );
                             
                             if (isExternal) {
@@ -199,8 +199,8 @@ export function Sidebar() {
                     className={cn(
                       'group flex items-center px-2 py-2 text-sm font-medium rounded-md transition-colors',
                       isActive
-                        ? 'bg-[#8500FF] text-white'
-                        : 'text-gray-300 hover:bg-black/40 hover:text-white'
+                        ? 'bg-white text-black'
+                        : 'text-gray-300 hover:bg-white/10 hover:text-white'
                     )}
                     onClick={() => {
                       setIsOpen(false);
@@ -209,7 +209,7 @@ export function Sidebar() {
                     <link.icon
                       className={cn(
                         'mr-3 h-5 w-5 flex-shrink-0',
-                        isActive ? 'text-white' : 'text-gray-400 group-hover:text-gray-500'
+                        isActive ? 'text-black' : 'text-gray-400 group-hover:text-gray-300'
                       )}
                     />
                     {link.name}
@@ -238,3 +238,15 @@ export function Sidebar() {
     </>
   );
 }
+
+
+
+
+
+
+
+
+
+
+
+
