@@ -28,9 +28,14 @@ function isNavSection(item: NavItem): item is NavSection {
   return 'children' in item;
 }
 
+const isTokenCreationComingSoon = process.env.NEXT_PUBLIC_TOKEN_CREATION_COMING_SOON === 'true';
+const isLiquidityLockerComingSoon = process.env.NEXT_PUBLIC_LIQUIDITY_LOCKER_COMING_SOON === 'true';
+const isVestingComingSoon = process.env.NEXT_PUBLIC_VESTING_COMING_SOON === 'true';
+const isMultiSendComingSoon = process.env.NEXT_PUBLIC_MULTISEND_COMING_SOON === 'true';
+
 const navigation: NavItem[] = [
   { name: 'Dashboard', href: '/dasboard', icon: LayoutDashboard },
-  { name: 'Token Creation', href: '/create-token', icon: Coins },
+  { name: isTokenCreationComingSoon ? 'Token Creation (Soon)' : 'Token Creation', href: '/create-token', icon: Coins },
   {
     name: 'Token Locker',
     icon: Lock,
@@ -40,7 +45,7 @@ const navigation: NavItem[] = [
     ],
   },
   {
-    name: 'Liquidity Locker',
+    name: isLiquidityLockerComingSoon ? 'Liquidity Locker (Soon)' : 'Liquidity Locker',
     icon: Shield,
     children: [
       { name: 'Create Lock', href: '/liquidity-locker' },
@@ -48,14 +53,14 @@ const navigation: NavItem[] = [
     ],
   },
   {
-    name: 'Token Vesting',
+    name: isVestingComingSoon ? 'Token Vesting (Soon)' : 'Token Vesting',
     icon: Calendar,
     children: [
       { name: 'Create Vesting', href: '/token-vesting/create-vesting' },
       { name: 'My Vestings', href: '/token-vesting/my-vesting' },
     ],
   },
-  { name: 'Multi-Send', href: '/multi-send', icon: Send },
+  { name: isMultiSendComingSoon ? 'Multi-Send (Soon)' : 'Multi-Send', href: '/multi-send', icon: Send },
   { name: 'Burn', href: '/burn', icon: Flame },
 ];
 

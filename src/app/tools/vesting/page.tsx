@@ -34,7 +34,7 @@ const vestingSchema = z.object({
 type VestingForm = z.infer<typeof vestingSchema>;
 
 export default function VestingPage() {
-  const isComingSoon = true;
+  const isComingSoon = process.env.NEXT_PUBLIC_VESTING_COMING_SOON === 'true';
 
   // All hooks must be called before any conditional returns
   const { address } = useAccount();

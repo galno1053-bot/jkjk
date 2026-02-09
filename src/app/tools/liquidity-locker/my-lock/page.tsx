@@ -31,7 +31,7 @@ export default function MyLiquidityLockPage() {
   const { isLoading: isConfirming, isSuccess } = useWaitForTransactionReceipt({ hash: txHash });
 
   const locker = (process.env.NEXT_PUBLIC_LP_LOCKER || '') as `0x${string}`;
-  const isComingSoon = true; // Toggle: blur UI while feature is not ready
+  const isComingSoon = process.env.NEXT_PUBLIC_LIQUIDITY_LOCKER_COMING_SOON === 'true'; // Toggle via env
 
   const safeFormat = (value?: bigint, decimals?: number, symbol?: string) => {
     try {
